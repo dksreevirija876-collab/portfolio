@@ -1,0 +1,636 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D.K. Sreevirija | Bioinformatics Portfolio</title>
+
+<style>
+:root {
+  --bg: #071016;
+  --panel: #101d26;
+  --text: #edf7f7;
+  --muted: #a1b4bd;
+  --accent: #5eead4;
+  --blue: #80aaff;
+  --border: #243943;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.7;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 8%;
+  background: rgba(7, 16, 22, 0.94);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+
+.logo {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 19px;
+}
+
+nav .links {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+nav a:hover {
+  color: var(--accent);
+}
+
+section {
+  padding: 85px 9%;
+  scroll-margin-top: 65px;
+}
+
+.hero {
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 90% 45%,
+      #12383b 0%, transparent 42%),
+    radial-gradient(ellipse at 5% 80%,
+      #132a43 0%, transparent 35%);
+}
+
+.hero-content {
+  max-width: 850px;
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  color: var(--accent);
+  letter-spacing: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: 1.12;
+  margin: 22px 0;
+  letter-spacing: -2px;
+}
+
+h1 span, .highlight {
+  color: var(--accent);
+}
+
+.hero p {
+  color: var(--muted);
+  max-width: 620px;
+  font-size: 17px;
+}
+
+.buttons {
+  display: flex;
+  gap: 14px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  transition: 0.25s;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #071016;
+  font-weight: bold;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 24px #5eead425;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 35px;
+}
+
+.tag {
+  border: 1px solid var(--border);
+  background: #0e1b22;
+  padding: 7px 13px;
+  border-radius: 20px;
+  color: #c6d7df;
+  font-size: 12px;
+}
+
+.section-label {
+  color: var(--accent);
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: clamp(29px, 4vw, 42px);
+  margin: 10px 0 16px;
+  line-height: 1.25;
+}
+
+.intro {
+  color: var(--muted);
+  max-width: 700px;
+  margin-bottom: 35px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 25px;
+  border-radius: 14px;
+  transition: 0.25s;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-5px);
+}
+
+.card .number {
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+.card h3 {
+  margin: 12px 0;
+  font-size: 19px;
+}
+
+.card p, .card li {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.card ul {
+  padding-left: 18px;
+  margin-top: 10px;
+}
+
+#journey {
+  background: #0a141c;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.step {
+  padding: 22px;
+  border-left: 2px solid var(--accent);
+  background: #101d26;
+  border-radius: 0 10px 10px 0;
+}
+
+.step small {
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.step h3 {
+  margin: 7px 0;
+}
+
+.step p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.skill {
+  padding: 12px 18px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #d5e5e9;
+}
+
+.timeline {
+  border-left: 2px solid var(--accent);
+  padding-left: 25px;
+  margin-left: 7px;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 32px;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -32px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.timeline-item p {
+  color: var(--muted);
+}
+
+.contact {
+  text-align: center;
+  background:
+    radial-gradient(ellipse at center, #123437, transparent 65%);
+}
+
+.contact p {
+  color: var(--muted);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+#topButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border: 1px solid var(--accent);
+  background: var(--panel);
+  color: var(--accent);
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  nav {
+    padding: 15px 5%;
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  nav .links {
+    gap: 12px;
+  }
+
+  section {
+    padding: 65px 6%;
+  }
+
+  .grid, .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    min-height: 78vh;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="#home" class="logo">D.K.S. / BIO</a>
+
+  <div class="links">
+    <a href="#about">About</a>
+    <a href="#journey">Journey</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="eyebrow">BIOLOGY MEETS COMPUTATION</div>
+
+    <h1>
+      D.K.<br>
+      <span>Sreevirija.</span>
+    </h1>
+
+    <p>
+      An aspiring Bioinformatician exploring the space where
+      biotechnology, biological data, Python and artificial
+      intelligence come together.
+    </p>
+
+    <div class="buttons">
+      <a class="btn primary" href="#projects">Explore My Work ↗</a>
+      <a class="btn" href="#about">Discover My Journey</a>
+    </div>
+
+    <div class="hero-tags">
+      <span class="tag">Biotechnology</span>
+      <span class="tag">Bioinformatics</span>
+      <span class="tag">Python</span>
+      <span class="tag">AI / ML</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 / THE PERSON BEHIND THE DATA</div>
+  <h2>Curious about life.<br>
+    <span class="highlight">Inspired by data.</span>
+  </h2>
+
+  <p class="intro">
+    I am D.K. Sreevirija, an integrated Biotechnology and
+    Bioinformatics student with an interest in computational
+    biology, machine learning and scientific problem-solving.
+    I enjoy learning how programming can help us understand
+    biological information and turn data into useful insights.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="number">01 / BIOLOGY</div>
+      <h3>Understand Life</h3>
+      <p>Exploring biotechnology, genomics and the science behind living systems.</p>
+    </div>
+
+    <div class="card">
+      <div class="number">02 / COMPUTATION</div>
+      <h3>Work With Data</h3>
+      <p>Learning Python and data-analysis tools to process and study information.</p>
+    </div>
+
+    <div class="card">
+      <div class="number">03 / INTELLIGENCE</div>
+      <h3>Build With AI</h3>
+      <p>Exploring machine learning models and practical software prototypes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="section-label">02 / BUILDING A BIOINFORMATICIAN</div>
+  <h2>Every skill is another step.</h2>
+  <p class="intro">
+    My journey connects scientific knowledge with computational tools.
+  </p>
+
+  <div class="steps">
+    <div class="step">
+      <small>STAGE 01</small>
+      <h3>Biology</h3>
+      <p>Build a foundation in biotechnology and biological systems.</p>
+    </div>
+
+    <div class="step">
+      <small>STAGE 02</small>
+      <h3>Programming</h3>
+      <p>Use Python, NumPy and pandas to work with data.</p>
+    </div>
+
+    <div class="step">
+      <small>STAGE 03</small>
+      <h3>Machine Learning</h3>
+      <p>Explore classification, model evaluation and data-driven methods.</p>
+    </div>
+
+    <div class="step">
+      <small>STAGE 04</small>
+      <h3>Bioinformatics</h3>
+      <p>Apply computational methods to biological datasets.</p>
+    </div>
+
+    <div class="step">
+      <small>STAGE 05</small>
+      <h3>Build Projects</h3>
+      <p>Turn ideas into documented and reproducible projects.</p>
+    </div>
+
+    <div class="step">
+      <small>NEXT STAGE</small>
+      <h3>Keep Discovering</h3>
+      <p>Continue developing skills in genomics and computational biology.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">03 / MY TOOLKIT</div>
+  <h2>Tools I work with.</h2>
+  <p class="intro">
+    A growing collection of programming, data-science and development tools.
+  </p>
+
+  <div class="skill-list">
+    <span class="skill">Python</span>
+    <span class="skill">NumPy</span>
+    <span class="skill">pandas</span>
+    <span class="skill">scikit-learn</span>
+    <span class="skill">Machine Learning</span>
+    <span class="skill">Data Science</span>
+    <span class="skill">Git & GitHub</span>
+    <span class="skill">VS Code</span>
+    <span class="skill">Jupyter</span>
+    <span class="skill">Django</span>
+    <span class="skill">Excel</span>
+    <span class="skill">Teachable Machine</span>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">04 / EXPERIMENTS IN CODE</div>
+  <h2>Ideas turned into projects.</h2>
+  <p class="intro">
+    A selection of projects connecting data analysis, machine learning
+    and biological applications.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="number">PROJECT / 01</div>
+      <h3>Gene-Expression Classification</h3>
+      <p>
+        A biological-data project focused on preprocessing,
+        feature selection and supervised classification.
+      </p>
+      <ul>
+        <li>Python and NumPy</li>
+        <li>scikit-learn</li>
+        <li>Cross-validation and model evaluation</li>
+      </ul>
+      <p style="margin-top:16px;color:var(--accent)">
+        BIOLOGY + DATA
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="number">PROJECT / 02</div>
+      <h3>Interactive ML Demo</h3>
+      <p>
+        A lightweight demonstration combining Django and
+        Teachable Machine to illustrate a machine-learning workflow.
+      </p>
+      <ul>
+        <li>Interactive prototype</li>
+        <li>Web development</li>
+        <li>Project documentation</li>
+      </ul>
+      <p style="margin-top:16px;color:var(--accent)">
+        AI + DEVELOPMENT
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="number">PROJECT / 03</div>
+      <h3>What's Next?</h3>
+      <p>
+        My next goal is to create more reproducible bioinformatics
+        projects and explore biological datasets through code.
+      </p>
+      <ul>
+        <li>Genomics</li>
+        <li>Data visualization</li>
+        <li>Computational biology</li>
+      </ul>
+      <p style="margin-top:16px;color:var(--accent)">
+        CURRENT LEARNING GOALS
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE AND EDUCATION -->
+<section id="experience">
+  <div class="section-label">05 / MY BACKGROUND</div>
+  <h2>Learning. Applying. Growing.</h2>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <small class="highlight">JUNE – SEPTEMBER 2026</small>
+      <h3>AIML Intern — Exameets Skillverse</h3>
+      <p>
+        Worked on machine-learning models, data preprocessing,
+        feature engineering, GitHub collaboration and a Django-based
+        demonstration prototype.
+      </p>
+    </div>
+
+    <div class="timeline-item">
+      <small class="highlight">2026 – 2030</small>
+      <h3>Integrated M.Sc. — Biotechnology & Bioinformatics</h3>
+      <p>
+        Currently pursuing an integrated degree, building knowledge
+        for a future in bioinformatics and computational biology.
+      </p>
+    </div>
+
+    <div class="timeline-item">
+      <small class="highlight">2023 – 2025</small>
+      <h3>Intermediate — Science</h3>
+      <p>Sri Chaitanya Junior College.</p>
+    </div>
+
+    <div class="timeline-item">
+      <small class="highlight">2022 – 2023</small>
+      <h3>Secondary School</h3>
+      <p>Sri Sai Krishna School, Kadapa.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-label">06 / LET'S CONNECT</div>
+  <h2>Let's turn data into discovery.</h2>
+  <p>
+    Interested in bioinformatics, biological data, AI/ML or
+    collaborative projects? I'd be happy to connect.
+  </p>
+
+  <div class="buttons" style="justify-content:center">
+    <a class="btn primary"
+       href="mailto:dksreevirija876@gmail.com">
+       Email Me ↗
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>Designed & built by D.K. Sreevirija</p>
+  <p>Biology × Data × Intelligence</p>
+  <p>© <span id="year"></span> All rights reserved.</p>
+</footer>
+
+<button id="topButton" aria-label="Back to top"
+        onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  ↑
+</button>
+
+<script>
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+</script>
+
+</body>
+</html>
