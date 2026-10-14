@@ -1,636 +1,4448 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="midnight">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D.K. Sreevirija | Bioinformatics Portfolio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>D.K. Sreevirija | BioCode Lab — Computational Biology & AI/ML Portfolio</title>
+  <meta name="description" content="Futuristic interactive bioinformatics portfolio of D.K. Sreevirija. Bridging DNA, biotechnology, Python, and machine learning.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Orbitron:wght@500;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Three.js for 3D Interactive DNA Double Helix -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-<style>
-:root {
-  --bg: #071016;
-  --panel: #101d26;
-  --text: #edf7f7;
-  --muted: #a1b4bd;
-  --accent: #5eead4;
-  --blue: #80aaff;
-  --border: #243943;
-}
+  <style>
+    /* ==========================================================================
+       THEME VARIABLES: MIDNIGHT (DARK) & LIGHT BLUE (LIGHT)
+       ========================================================================== */
+    :root,
+    [data-theme="midnight"] {
+      --bg-void: #020617;
+      --bg-dark: #070e1e;
+      --bg-header: rgba(4, 9, 20, 0.88);
+      --bg-card: rgba(11, 22, 38, 0.78);
+      --bg-card-hover: rgba(16, 32, 54, 0.92);
+      --bg-glass: rgba(8, 18, 32, 0.65);
+      --bg-input: rgba(3, 8, 16, 0.9);
+      
+      --cyan-neon: #00f5d4;
+      --cyan-glow: rgba(0, 245, 212, 0.28);
+      --cyan-bright: #5eead4;
+      --cyan-dim: #134e4a;
+      
+      --blue-electric: #38bdf8;
+      --purple-helix: #9d4edd;
+      --purple-glow: rgba(157, 78, 221, 0.25);
+      
+      --dna-a: #10b981; /* Adenine - Emerald Green */
+      --dna-t: #f43f5e; /* Thymine - Rose Crimson */
+      --dna-g: #fbbf24; /* Guanine - Amber Gold */
+      --dna-c: #38bdf8; /* Cytosine - Azure Blue */
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --border-subtle: rgba(56, 189, 248, 0.16);
+      --border-bright: rgba(0, 245, 212, 0.45);
+      --border-purple: rgba(157, 78, 221, 0.35);
+      
+      --hud-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.6);
+      --glow-drop: 0 0 20px rgba(0, 245, 212, 0.2);
+      --scanline-opacity: 0.22;
+      --bg-grid-line: rgba(56, 189, 248, 0.03);
+    }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  scroll-behavior: smooth;
-}
+    /* LIGHT MODE: LIGHT BLUE (CLEANROOM / CRYO LAB AESTHETIC) */
+    [data-theme="light-blue"] {
+      --bg-void: #e8f4fc;
+      --bg-dark: #d6ecfa;
+      --bg-header: rgba(232, 244, 252, 0.92);
+      --bg-card: rgba(255, 255, 255, 0.88);
+      --bg-card-hover: rgba(255, 255, 255, 0.98);
+      --bg-glass: rgba(255, 255, 255, 0.75);
+      --bg-input: #ffffff;
+      
+      --cyan-neon: #0284c7;
+      --cyan-glow: rgba(2, 132, 199, 0.22);
+      --cyan-bright: #0369a1;
+      --cyan-dim: #0284c7;
+      
+      --blue-electric: #0284c7;
+      --purple-helix: #7c3aed;
+      --purple-glow: rgba(124, 58, 237, 0.18);
+      
+      --dna-a: #059669;
+      --dna-t: #e11d48;
+      --dna-g: #d97706;
+      --dna-c: #0284c7;
+      
+      --text-main: #0c2338;
+      --text-muted: #2d4c66;
+      --text-dim: #5c7b94;
+      
+      --border-subtle: rgba(2, 132, 199, 0.22);
+      --border-bright: rgba(2, 132, 199, 0.55);
+      --border-purple: rgba(124, 58, 237, 0.35);
+      
+      --hud-shadow: 0 10px 30px rgba(2, 132, 199, 0.12);
+      --glow-drop: 0 0 16px rgba(2, 132, 199, 0.18);
+      --scanline-opacity: 0.06;
+      --bg-grid-line: rgba(2, 132, 199, 0.05);
+    }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.7;
-}
+    /* Common Typography & Layout Tokens */
+    :root {
+      --font-display: 'Orbitron', monospace, sans-serif;
+      --font-body: 'Space Grotesk', -apple-system, sans-serif;
+      --font-mono: 'Fira Code', 'Courier New', monospace;
+      
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+    }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
 
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 8%;
-  background: rgba(7, 16, 22, 0.94);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(12px);
-}
+    ::selection {
+      background: var(--cyan-neon);
+      color: #ffffff;
+    }
 
-.logo {
-  color: var(--accent);
-  font-weight: bold;
-  font-size: 19px;
-}
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.65;
+      overflow-x: hidden;
+      position: relative;
+      transition: background-color 0.35s ease, color 0.35s ease;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 245, 212, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 85% 65%, rgba(157, 78, 221, 0.05) 0%, transparent 45%),
+        linear-gradient(var(--bg-grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bg-grid-line) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    }
 
-nav .links {
-  display: flex;
-  gap: 22px;
-  flex-wrap: wrap;
-  font-size: 13px;
-}
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-void);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--cyan-dim);
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--cyan-neon);
+    }
 
-nav a:hover {
-  color: var(--accent);
-}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-section {
-  padding: 85px 9%;
-  scroll-margin-top: 65px;
-}
+    /* Subtle Scanlines Overlay */
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      opacity: var(--scanline-opacity);
+      transition: opacity 0.35s ease;
+    }
 
-.hero {
-  min-height: 88vh;
-  display: flex;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse at 90% 45%,
-      #12383b 0%, transparent 42%),
-    radial-gradient(ellipse at 5% 80%,
-      #132a43 0%, transparent 35%);
-}
+    /* SVG Icon Helpers */
+    .svg-icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      vertical-align: middle;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .svg-icon.lg {
+      width: 20px;
+      height: 20px;
+    }
+    .svg-icon.sm {
+      width: 13px;
+      height: 13px;
+    }
 
-.hero-content {
-  max-width: 850px;
-  position: relative;
-  z-index: 1;
-}
+    /* ==========================================================================
+       NAVIGATION & HUD HEADER
+       ========================================================================== */
+    header.hud-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 5%;
+      background: var(--bg-header);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background-color 0.35s ease, border-color 0.35s ease;
+    }
 
-.eyebrow {
-  color: var(--accent);
-  letter-spacing: 3px;
-  font-size: 12px;
-  font-weight: bold;
-}
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-h1 {
-  font-size: clamp(42px, 7vw, 76px);
-  line-height: 1.12;
-  margin: 22px 0;
-  letter-spacing: -2px;
-}
+    .bio-hex-badge {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, rgba(0, 245, 212, 0.2), rgba(157, 78, 221, 0.3));
+      border: 1px solid var(--cyan-neon);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--cyan-neon);
+      box-shadow: 0 0 15px var(--cyan-glow);
+      position: relative;
+    }
 
-h1 span, .highlight {
-  color: var(--accent);
-}
+    .bio-hex-badge::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 6px;
+      height: 6px;
+      background: var(--cyan-neon);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--cyan-neon);
+    }
 
-.hero p {
-  color: var(--muted);
-  max-width: 620px;
-  font-size: 17px;
-}
+    .brand-info .logo-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 1.2px;
+      color: var(--text-main);
+      font-weight: 700;
+    }
 
-.buttons {
-  display: flex;
-  gap: 14px;
-  margin-top: 30px;
-  flex-wrap: wrap;
-}
+    .brand-info .system-status {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--cyan-bright);
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
 
-.btn {
-  display: inline-block;
-  padding: 12px 22px;
-  border-radius: 8px;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  transition: 0.25s;
-}
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan-neon);
+      animation: pulseGlow 1.8s infinite;
+    }
 
-.btn.primary {
-  background: var(--accent);
-  color: #071016;
-  font-weight: bold;
-}
+    @keyframes pulseGlow {
+      0% { opacity: 0.4; box-shadow: 0 0 0px var(--cyan-neon); }
+      50% { opacity: 1; box-shadow: 0 0 8px var(--cyan-neon); }
+      100% { opacity: 0.4; box-shadow: 0 0 0px var(--cyan-neon); }
+    }
 
-.btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 24px #5eead425;
-}
+    nav.nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
-.hero-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 35px;
-}
+    nav.nav-links a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+      position: relative;
+      padding: 4px 0;
+    }
 
-.tag {
-  border: 1px solid var(--border);
-  background: #0e1b22;
-  padding: 7px 13px;
-  border-radius: 20px;
-  color: #c6d7df;
-  font-size: 12px;
-}
+    nav.nav-links a:hover,
+    nav.nav-links a.active {
+      color: var(--cyan-neon);
+      text-shadow: 0 0 10px var(--cyan-glow);
+    }
 
-.section-label {
-  color: var(--accent);
-  letter-spacing: 2px;
-  font-size: 12px;
-  font-weight: bold;
-}
+    nav.nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--cyan-neon);
+      transition: width 0.25s ease;
+    }
 
-h2 {
-  font-size: clamp(29px, 4vw, 42px);
-  margin: 10px 0 16px;
-  line-height: 1.25;
-}
+    nav.nav-links a:hover::after {
+      width: 100%;
+    }
 
-.intro {
-  color: var(--muted);
-  max-width: 700px;
-  margin-bottom: 35px;
-}
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
+    /* THEME TOGGLE BUTTON */
+    .btn-theme-toggle {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--cyan-bright);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+    }
 
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  padding: 25px;
-  border-radius: 14px;
-  transition: 0.25s;
-}
+    .btn-theme-toggle:hover {
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 14px var(--cyan-glow);
+      transform: translateY(-1px);
+    }
 
-.card:hover {
-  border-color: var(--accent);
-  transform: translateY(-5px);
-}
+    /* Audio alert pill */
+    .audio-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--cyan-bright);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+    }
+    .audio-pill:hover {
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 14px var(--cyan-glow);
+    }
+    .audio-pill.active {
+      background: rgba(0, 245, 212, 0.15);
+      border-color: var(--cyan-neon);
+    }
+    .sound-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+    .sound-bar {
+      width: 2px;
+      height: 3px;
+      background: var(--cyan-neon);
+      border-radius: 1px;
+      transition: height 0.2s;
+    }
+    .audio-pill.active .sound-bar:nth-child(1) { animation: soundWave 0.8s infinite ease-in-out; }
+    .audio-pill.active .sound-bar:nth-child(2) { animation: soundWave 0.8s 0.2s infinite ease-in-out; }
+    .audio-pill.active .sound-bar:nth-child(3) { animation: soundWave 0.8s 0.4s infinite ease-in-out; }
+    @keyframes soundWave {
+      0%, 100% { height: 3px; }
+      50% { height: 12px; }
+    }
 
-.card .number {
-  color: var(--accent);
-  font-size: 13px;
-  letter-spacing: 2px;
-}
+    .btn-terminal-trigger {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--cyan-bright);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-terminal-trigger:hover {
+      border-color: var(--cyan-neon);
+      background: rgba(0, 245, 212, 0.1);
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
 
-.card h3 {
-  margin: 12px 0;
-  font-size: 19px;
-}
+    /* Mobile toggle */
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--cyan-neon);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-.card p, .card li {
-  color: var(--muted);
-  font-size: 14px;
-}
+    /* ==========================================================================
+       HERO: THE BIODIGITAL NEXUS (ANIMATED AVATAR + 3D DNA HELIX)
+       ========================================================================== */
+    .hero-section {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      padding: 40px 5% 60px;
+      overflow: hidden;
+    }
 
-.card ul {
-  padding-left: 18px;
-  margin-top: 10px;
-}
+    /* 3D Canvas Background Container */
+    #dna-canvas-container {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: auto;
+      opacity: 0.9;
+      transition: opacity 0.3s;
+    }
 
-#journey {
-  background: #0a141c;
-}
+    #dnaFallbackCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
 
-.steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
+    .hero-layout {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 36px;
+      align-items: center;
+      width: 100%;
+    }
 
-.step {
-  padding: 22px;
-  border-left: 2px solid var(--accent);
-  background: #101d26;
-  border-radius: 0 10px 10px 0;
-}
+    .hero-content {
+      max-width: 650px;
+    }
 
-.step small {
-  color: var(--accent);
-  letter-spacing: 1px;
-}
+    .hud-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan-bright);
+      background: rgba(0, 245, 212, 0.08);
+      border: 1px solid var(--border-subtle);
+      padding: 5px 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(0, 245, 212, 0.08);
+    }
 
-.step h3 {
-  margin: 7px 0;
-}
+    .hud-bracket {
+      color: var(--purple-helix);
+      font-weight: bold;
+    }
 
-.step p {
-  color: var(--muted);
-  font-size: 14px;
-}
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 5.5vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
 
-.skill-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg, var(--text-main) 15%, var(--cyan-neon) 60%, var(--purple-helix) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
 
-.skill {
-  padding: 12px 18px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: #d5e5e9;
-}
+    .hero-subtitle {
+      font-family: var(--font-mono);
+      font-size: clamp(13px, 1.8vw, 16px);
+      color: var(--cyan-bright);
+      margin-bottom: 18px;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.timeline {
-  border-left: 2px solid var(--accent);
-  padding-left: 25px;
-  margin-left: 7px;
-}
+    .sub-pill {
+      background: rgba(157, 78, 221, 0.15);
+      border: 1px solid var(--border-purple);
+      color: var(--purple-helix);
+      padding: 3px 9px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
 
-.timeline-item {
-  position: relative;
-  padding: 0 0 32px;
-}
+    .hero-description {
+      font-size: 15.5px;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
 
-.timeline-item::before {
-  content: "";
-  position: absolute;
-  left: -32px;
-  top: 8px;
-  width: 12px;
-  height: 12px;
-  background: var(--accent);
-  border-radius: 50%;
-}
+    .hero-description strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
 
-.timeline-item p {
-  color: var(--muted);
-}
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 35px;
+    }
 
-.contact {
-  text-align: center;
-  background:
-    radial-gradient(ellipse at center, #123437, transparent 65%);
-}
+    .btn-biocode {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.28s ease;
+      position: relative;
+      overflow: hidden;
+    }
 
-.contact p {
-  color: var(--muted);
-  max-width: 560px;
-  margin: 0 auto;
-}
+    .btn-biocode.primary {
+      background: linear-gradient(135deg, var(--cyan-neon), #00b4d8);
+      color: #020617;
+      border: 1px solid var(--cyan-neon);
+      box-shadow: 0 0 25px rgba(0, 245, 212, 0.35);
+    }
 
-footer {
-  text-align: center;
-  padding: 25px;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 12px;
-}
+    .btn-biocode.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 35px rgba(0, 245, 212, 0.55);
+      background: linear-gradient(135deg, #5eead4, #38bdf8);
+    }
 
-#topButton {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  border: 1px solid var(--accent);
-  background: var(--panel);
-  color: var(--accent);
-  padding: 10px 14px;
-  border-radius: 50%;
-  cursor: pointer;
-}
+    .btn-biocode.secondary {
+      background: var(--bg-card);
+      color: var(--cyan-bright);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(10px);
+    }
 
-@media (max-width: 800px) {
-  nav {
-    padding: 15px 5%;
-    align-items: flex-start;
-    gap: 12px;
-    flex-direction: column;
-  }
+    .btn-biocode.secondary:hover {
+      border-color: var(--cyan-neon);
+      background: rgba(0, 245, 212, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
 
-  nav .links {
-    gap: 12px;
-  }
+    .btn-biocode.ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+    }
 
-  section {
-    padding: 65px 6%;
-  }
+    .btn-biocode.ghost:hover {
+      color: var(--text-main);
+      border-color: var(--cyan-neon);
+      transform: translateY(-2px);
+    }
 
-  .grid, .steps {
-    grid-template-columns: 1fr;
-  }
+    /* ==========================================================================
+       ANIMATED RESEARCHER AVATAR HOLOGRAPHIC FRAME
+       ========================================================================== */
+    .avatar-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
 
-  .hero {
-    min-height: 78vh;
-  }
-}
-</style>
+    .avatar-hologram-card {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 20px;
+      padding: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      box-shadow: var(--hud-shadow), 0 0 30px var(--cyan-glow);
+      backdrop-filter: blur(20px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .avatar-hologram-card:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: var(--hud-shadow), 0 0 45px var(--cyan-glow);
+    }
+
+    .avatar-image-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #020617;
+    }
+
+    .avatar-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform 0.5s ease;
+      animation: avatarBreath 6s ease-in-out infinite;
+    }
+
+    @keyframes avatarBreath {
+      0%, 100% { transform: scale(1.0); }
+      50% { transform: scale(1.025); }
+    }
+
+    /* Continuous Holographic Vertical Laser Scanner */
+    .hologram-scanner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent 0%, var(--cyan-neon) 50%, transparent 100%);
+      box-shadow: 0 0 15px var(--cyan-neon), 0 0 30px var(--cyan-neon);
+      animation: bioScannerMove 3.5s linear infinite;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    @keyframes bioScannerMove {
+      0% { top: -2%; opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { top: 102%; opacity: 0; }
+    }
+
+    /* Rotating HUD Reticle Rings */
+    .avatar-reticle-ring {
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 140px;
+      height: 140px;
+      border: 1.5px dashed var(--cyan-neon);
+      border-radius: 50%;
+      opacity: 0.35;
+      animation: spinReticle 18s linear infinite;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .avatar-reticle-ring.inner {
+      top: 15px;
+      right: 15px;
+      width: 50px;
+      height: 50px;
+      border: 1px dotted var(--purple-helix);
+      animation: spinReticle 9s linear infinite reverse;
+    }
+
+    @keyframes spinReticle {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Holographic Telemetry Badge Overlays */
+    .avatar-hud-badge {
+      position: absolute;
+      z-index: 5;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      background: rgba(4, 11, 22, 0.88);
+      border: 1px solid var(--border-bright);
+      color: var(--cyan-bright);
+      padding: 5px 10px;
+      border-radius: 4px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .avatar-hud-badge.top-left {
+      top: 12px;
+      left: 12px;
+    }
+
+    .avatar-hud-badge.bottom-right {
+      bottom: 12px;
+      right: 12px;
+      border-color: var(--purple-helix);
+      color: #e9d5ff;
+    }
+
+    .avatar-hud-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 6px 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .avatar-name-label {
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+    }
+
+    .avatar-id-tag {
+      color: var(--cyan-bright);
+      font-size: 10px;
+    }
+
+    /* Hero Telemetry HUD bar */
+    .telemetry-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--hud-shadow);
+      position: relative;
+    }
+
+    .telemetry-strip::before {
+      content: 'LIVE BIO-TELEMETRY // GENOMIC RUNTIME';
+      position: absolute;
+      top: -9px;
+      left: 16px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: var(--cyan-bright);
+      background: var(--bg-void);
+      padding: 0 8px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 3px;
+    }
+
+    .telemetry-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .telemetry-label {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .telemetry-value {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--cyan-neon);
+      letter-spacing: 0.5px;
+    }
+
+    .telemetry-value.purple {
+      color: var(--purple-helix);
+    }
+
+    /* 3D Helix HUD Info overlay */
+    .helix-hud-overlay {
+      position: absolute;
+      bottom: 20px;
+      right: 5%;
+      z-index: 5;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 14px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      color: var(--text-muted);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .base-legend {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .base-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+    .base-dot.a { background: var(--dna-a); box-shadow: 0 0 6px var(--dna-a); }
+    .base-dot.t { background: var(--dna-t); box-shadow: 0 0 6px var(--dna-t); }
+    .base-dot.g { background: var(--dna-g); box-shadow: 0 0 6px var(--dna-g); }
+    .base-dot.c { background: var(--dna-c); box-shadow: 0 0 6px var(--dna-c); }
+
+    /* ==========================================================================
+       SECTION HEADERS & HUD STYLING
+       ========================================================================== */
+    section {
+      padding: 85px 5%;
+      position: relative;
+    }
+
+    .section-header {
+      margin-bottom: 42px;
+      position: relative;
+    }
+
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan-neon);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .section-eyebrow::before {
+      content: '//';
+      color: var(--purple-helix);
+      font-weight: bold;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 3.8vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      color: var(--text-main);
+    }
+
+    .section-title span.accent {
+      color: var(--cyan-neon);
+      text-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    .section-desc {
+      font-size: 15.5px;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin-top: 10px;
+    }
+
+    /* Common Card Styles */
+    .biocode-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .biocode-panel:hover {
+      border-color: var(--border-bright);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--cyan-glow);
+      transform: translateY(-3px);
+    }
+
+    /* Corner HUD brackets */
+    .hud-corners::before,
+    .hud-corners::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .hud-corners::before {
+      top: 0;
+      left: 0;
+      border-top: 2px solid var(--cyan-neon);
+      border-left: 2px solid var(--cyan-neon);
+    }
+
+    .hud-corners::after {
+      bottom: 0;
+      right: 0;
+      border-bottom: 2px solid var(--purple-helix);
+      border-right: 2px solid var(--purple-helix);
+    }
+
+    /* ==========================================================================
+       SECTION 01: THE INTERACTIVE "BIOCODE VIRTUAL LAB" (SANDBOX)
+       ========================================================================== */
+    #lab {
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .lab-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .lab-navigation {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lab-tab-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      text-align: left;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.25s ease;
+      font-family: var(--font-body);
+    }
+
+    .lab-tab-btn:hover {
+      border-color: var(--cyan-neon);
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+
+    .lab-tab-btn.active {
+      border-color: var(--cyan-neon);
+      background: rgba(0, 245, 212, 0.12);
+      color: var(--text-main);
+      box-shadow: inset 3px 0 0 var(--cyan-neon), 0 0 15px rgba(0, 245, 212, 0.12);
+    }
+
+    .lab-tab-title {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--cyan-bright);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lab-tab-desc {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .lab-workspace {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      backdrop-filter: blur(16px);
+      position: relative;
+    }
+
+    .workspace-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .workspace-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+    }
+
+    .preset-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .preset-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .preset-btn {
+      background: rgba(0, 245, 212, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--cyan-bright);
+      padding: 4px 9px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preset-btn:hover {
+      background: var(--cyan-neon);
+      color: #020617;
+    }
+
+    /* Central Dogma UI elements */
+    .sequence-input-group {
+      margin-bottom: 18px;
+    }
+
+    .sequence-input-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--cyan-bright);
+      margin-bottom: 8px;
+    }
+
+    .sequence-textarea {
+      width: 100%;
+      height: 72px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--cyan-bright);
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      padding: 12px 14px;
+      letter-spacing: 2px;
+      resize: vertical;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .sequence-textarea:focus {
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 12px var(--cyan-glow);
+    }
+
+    .lab-controls-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .btn-control {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 15px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-control:hover {
+      border-color: var(--cyan-neon);
+      background: rgba(0, 245, 212, 0.12);
+      color: var(--cyan-neon);
+    }
+
+    .btn-control.primary-run {
+      background: var(--cyan-neon);
+      color: #020617;
+      font-weight: 700;
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    .btn-control.primary-run:hover {
+      background: #5eead4;
+      transform: translateY(-1px);
+    }
+
+    /* Sequence Flow Stages */
+    .flow-stages {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .flow-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+
+    .flow-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .flow-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--cyan-bright);
+    }
+
+    .flow-badge.mrna { color: #38bdf8; }
+    .flow-badge.protein { color: var(--purple-helix); }
+
+    .flow-meta {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-dim);
+    }
+
+    .sequence-display {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      letter-spacing: 2px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 6px 0;
+      color: var(--text-main);
+      display: flex;
+      gap: 3px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .nucleotide-span {
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    .base-A { color: var(--dna-a); background: rgba(16, 185, 129, 0.12); }
+    .base-T { color: var(--dna-t); background: rgba(244, 63, 94, 0.12); }
+    .base-G { color: var(--dna-g); background: rgba(251, 191, 36, 0.12); }
+    .base-C { color: var(--dna-c); background: rgba(56, 189, 248, 0.12); }
+    .base-U { color: #f472b6; background: rgba(244, 114, 182, 0.12); }
+
+    .amino-codon-chip {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(157, 78, 221, 0.12);
+      border: 1px solid var(--border-purple);
+      border-radius: 4px;
+      padding: 3px 5px;
+      margin-right: 5px;
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
+    }
+    .amino-symbol {
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--text-main);
+    }
+    .amino-triplet {
+      font-size: 8.5px;
+      color: var(--text-dim);
+    }
+
+    /* Lab Metrics Bar */
+    .lab-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      background: var(--bg-card);
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .metric-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-box small {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .metric-box strong {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      color: var(--cyan-neon);
+      margin-top: 2px;
+    }
+
+    .gc-bar-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+
+    .gc-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, var(--cyan-neon));
+      border-radius: 3px;
+      width: 50%;
+      transition: width 0.4s ease;
+    }
+
+    /* AI Gene Expression Classifier Simulator UI */
+    .classifier-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .gene-slider-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .gene-slider-row {
+      margin-bottom: 14px;
+    }
+
+    .gene-slider-head {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      margin-bottom: 6px;
+    }
+
+    .gene-name {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .gene-fpkm {
+      color: var(--cyan-bright);
+    }
+
+    input[type=range].gene-range {
+      width: 100%;
+      accent-color: var(--cyan-neon);
+      background: rgba(0, 0, 0, 0.15);
+      height: 6px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .ai-inference-result {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .inference-verdict-box {
+      text-align: center;
+      padding: 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 245, 212, 0.1);
+    }
+
+    .verdict-tag {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--cyan-bright);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .verdict-main {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 8px 0;
+    }
+
+    .verdict-confidence {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--cyan-neon);
+    }
+
+    /* Embedded BioCode Interactive Terminal */
+    .lab-terminal-window {
+      background: #020509;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .terminal-bar {
+      background: #06101c;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .term-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .term-dot.red { background: #f43f5e; }
+    .term-dot.yellow { background: #fbbf24; }
+    .term-dot.green { background: #10b981; }
+
+    .terminal-title {
+      font-size: 11px;
+      color: #94a3b8;
+      letter-spacing: 1px;
+    }
+
+    .terminal-body {
+      padding: 14px;
+      height: 270px;
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #94a3b8;
+    }
+
+    .term-line {
+      margin-bottom: 4px;
+    }
+    .term-prompt {
+      color: var(--cyan-neon);
+      margin-right: 6px;
+    }
+    .term-output {
+      color: #94a3b8;
+    }
+    .term-highlight {
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .term-success {
+      color: #5eead4;
+    }
+    .term-warn {
+      color: #fbbf24;
+    }
+
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      background: #040910;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .term-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #5eead4;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    /* ==========================================================================
+       SECTION 02: THE COMPELLING JOURNEY (DATA -> COMPUTATIONAL BIOLOGY)
+       ========================================================================== */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      position: relative;
+    }
+
+    .pipeline-node {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .pipeline-node:hover {
+      border-color: var(--cyan-neon);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25), 0 0 20px var(--cyan-glow);
+    }
+
+    .pipeline-node.active-stage {
+      border-color: var(--cyan-neon);
+      background: var(--bg-card-hover);
+      box-shadow: 0 0 25px rgba(0, 245, 212, 0.2);
+    }
+
+    .stage-number {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--cyan-neon);
+      letter-spacing: 1.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .stage-badge {
+      background: rgba(0, 245, 212, 0.1);
+      border: 1px solid var(--border-subtle);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 9.5px;
+    }
+
+    .pipeline-node h3 {
+      font-family: var(--font-display);
+      font-size: 16.5px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .pipeline-node p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .stage-tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .tech-micro-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      background: var(--bg-void);
+      border: 1px solid var(--border-subtle);
+      color: var(--cyan-bright);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    /* Pipeline interactive deep-dive preview box */
+    .journey-inspector {
+      margin-top: 26px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      box-shadow: var(--hud-shadow);
+    }
+
+    .inspector-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .inspector-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      color: var(--cyan-bright);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .inspector-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .inspector-bio-col h4,
+    .inspector-code-col h4 {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .inspector-bio-col p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .code-snippet-box {
+      background: #020509;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #5eead4;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       SECTION 03: UNIQUE PROJECT SHOWCASE (LABORATORY DOSSIERS)
+       ========================================================================== */
+    .project-filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 7px 15px;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: rgba(0, 245, 212, 0.15);
+      border-color: var(--cyan-neon);
+      color: var(--cyan-neon);
+      box-shadow: 0 0 15px rgba(0, 245, 212, 0.2);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .project-card:hover {
+      border-color: var(--cyan-neon);
+      transform: translateY(-5px);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3), 0 0 25px var(--cyan-glow);
+    }
+
+    .project-card-header {
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .project-dossier-id {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--cyan-bright);
+      letter-spacing: 1px;
+    }
+
+    .project-category-badge {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      background: rgba(157, 78, 221, 0.12);
+      border: 1px solid var(--border-purple);
+      color: var(--purple-helix);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .project-card-body {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-title {
+      font-family: var(--font-display);
+      font-size: 17.5px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+
+    .project-telemetry-stats {
+      background: var(--bg-void);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 9px 12px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+    }
+
+    .p-stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .p-stat-label {
+      color: var(--text-dim);
+      font-size: 8.5px;
+      text-transform: uppercase;
+    }
+    .p-stat-val {
+      color: var(--cyan-neon);
+      font-weight: 700;
+    }
+
+    .project-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 18px;
+    }
+
+    .stack-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      background: rgba(0, 245, 212, 0.08);
+      border: 1px solid var(--border-subtle);
+      color: var(--cyan-bright);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .project-card-footer {
+      padding: 14px 20px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-inspect {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan-neon);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: gap 0.2s;
+    }
+    .btn-inspect:hover {
+      gap: 8px;
+      text-shadow: 0 0 8px var(--cyan-glow);
+    }
+
+    /* Modal for deep dossier inspect */
+    .dossier-modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(2, 6, 23, 0.88);
+      backdrop-filter: blur(14px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .dossier-modal-backdrop.active {
+      display: flex;
+    }
+
+    .dossier-modal {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-md);
+      max-width: 680px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 26px;
+      box-shadow: 0 0 50px rgba(0, 245, 212, 0.2);
+      position: relative;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--cyan-neon);
+      font-family: var(--font-mono);
+      font-size: 16px;
+      padding: 3px 9px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .modal-close-btn:hover {
+      background: var(--cyan-neon);
+      color: #020617;
+    }
+
+    /* ==========================================================================
+       SECTION 04: COMPUTATIONAL & BIOLOGICAL ARSENAL (SKILLS)
+       ========================================================================== */
+    .arsenal-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .arsenal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+
+    .arsenal-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-4px);
+    }
+
+    .arsenal-category-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 14px;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .arsenal-category-head .category-icon {
+      color: var(--cyan-neon);
+    }
+
+    .skill-bars-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .skill-bar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .skill-bar-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .skill-bar-name {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .skill-bar-pct {
+      color: var(--cyan-bright);
+    }
+
+    .skill-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue-electric), var(--cyan-neon));
+      border-radius: 3px;
+      transition: width 1s ease-in-out;
+    }
+
+    .skill-fill.purple {
+      background: linear-gradient(90deg, #7c3aed, #c084fc);
+    }
+
+    /* ==========================================================================
+       SECTION 05: CHRONICLES & BACKGROUND (LOGS & TIMELINE)
+       ========================================================================== */
+    .chronicles-container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .chronicles-timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .chronicles-timeline::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      left: 10px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--cyan-neon), var(--purple-helix), var(--border-subtle));
+    }
+
+    .log-item {
+      position: relative;
+      margin-bottom: 35px;
+    }
+
+    .log-node-dot {
+      position: absolute;
+      left: -27px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      background: var(--bg-void);
+      border: 2px solid var(--cyan-neon);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
+
+    .log-node-dot.current {
+      background: var(--cyan-neon);
+      box-shadow: 0 0 16px var(--cyan-neon);
+    }
+
+    .log-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+
+    .log-card:hover {
+      border-color: var(--border-bright);
+      transform: translateX(5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .log-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .log-date {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan-neon);
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .log-badge {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(157, 78, 221, 0.12);
+      border: 1px solid var(--border-purple);
+      color: var(--purple-helix);
+      font-weight: 600;
+    }
+
+    .log-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .log-institution {
+      font-size: 13px;
+      color: var(--cyan-bright);
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .log-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ==========================================================================
+       SECTION 06: TRANSMISSION / CONTACT CONSOLE
+       ========================================================================== */
+    .contact-wrapper {
+      max-width: 760px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 34px;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--hud-shadow);
+      position: relative;
+    }
+
+    .transmission-header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .transmission-header h3 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .transmission-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .contact-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--cyan-bright);
+      letter-spacing: 0.5px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 14px var(--cyan-glow);
+    }
+
+    .form-textarea {
+      height: 95px;
+      resize: vertical;
+      font-family: var(--font-body);
+    }
+
+    .transmission-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .quick-email-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quick-email-pill:hover {
+      border-color: var(--cyan-neon);
+      color: var(--cyan-bright);
+    }
+
+    /* Toast Notification */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-dark);
+      border: 1px solid var(--cyan-neon);
+      color: var(--cyan-bright);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 9px 18px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px var(--cyan-glow);
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast-pill.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       FOOTER & FLOATING LAB CONTROLS
+       ========================================================================== */
+    footer.biocode-footer {
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-dark);
+      padding: 30px 5% 22px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-dim);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .footer-security-seal {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--cyan-bright);
+      background: rgba(0, 245, 212, 0.06);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 10.5px;
+    }
+
+    #btnScrollTop {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--cyan-neon);
+      color: var(--cyan-neon);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 90;
+      box-shadow: 0 0 15px var(--cyan-glow);
+      transition: all 0.25s ease;
+    }
+    #btnScrollTop:hover {
+      background: var(--cyan-neon);
+      color: #020617;
+      transform: translateY(-3px);
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS (PERFECT ON ALL SCREEN SIZES)
+       ========================================================================== */
+    @media (max-width: 1080px) {
+      .hero-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      .avatar-wrapper {
+        order: -1;
+      }
+      .avatar-hologram-card {
+        max-width: 320px;
+      }
+      .avatar-image-container {
+        height: 320px;
+      }
+      .projects-grid,
+      .pipeline-grid,
+      .arsenal-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .lab-container {
+        grid-template-columns: 1fr;
+      }
+      #dna-canvas-container {
+        width: 100%;
+        opacity: 0.35;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header.hud-header {
+        padding: 12px 4%;
+      }
+      nav.nav-links {
+        display: none;
+      }
+      nav.nav-links.mobile-open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--bg-header);
+        padding: 20px 4%;
+        border-bottom: 1px solid var(--border-bright);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        gap: 14px;
+      }
+      .mobile-menu-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .header-actions {
+        gap: 6px;
+      }
+      .btn-terminal-trigger {
+        display: none; /* Accessible in tab */
+      }
+      .btn-theme-toggle span.toggle-text {
+        display: none;
+      }
+      .audio-pill span#sfxStatusText {
+        display: none;
+      }
+
+      .hero-section {
+        padding: 25px 4% 45px;
+        min-height: auto;
+      }
+      .hero-title {
+        font-size: 32px;
+      }
+      .telemetry-strip {
+        grid-template-columns: 1fr 1fr;
+        padding: 12px;
+      }
+      .helix-hud-overlay {
+        display: none;
+      }
+
+      section {
+        padding: 60px 4%;
+      }
+
+      .projects-grid,
+      .pipeline-grid,
+      .arsenal-grid,
+      .classifier-grid,
+      .inspector-grid,
+      .contact-form-grid {
+        grid-template-columns: 1fr;
+      }
+      .lab-metrics-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .lab-workspace {
+        padding: 18px 14px;
+      }
+      .contact-wrapper {
+        padding: 22px 16px;
+      }
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      .transmission-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .quick-email-pill {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .avatar-hologram-card {
+        max-width: 270px;
+      }
+      .avatar-image-container {
+        height: 270px;
+      }
+      .hero-title {
+        font-size: 27px;
+      }
+      .btn-biocode {
+        width: 100%;
+        justify-content: center;
+      }
+      .lab-controls-row {
+        flex-direction: column;
+      }
+      .btn-control {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<nav>
-  <a href="#home" class="logo">D.K.S. / BIO</a>
+  <!-- Subtle Scanlines Overlay -->
+  <div class="scanlines"></div>
 
-  <div class="links">
-    <a href="#about">About</a>
-    <a href="#journey">Journey</a>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </div>
-</nav>
-
-<!-- HOME -->
-<section class="hero" id="home">
-  <div class="hero-content">
-    <div class="eyebrow">BIOLOGY MEETS COMPUTATION</div>
-
-    <h1>
-      D.K.<br>
-      <span>Sreevirija.</span>
-    </h1>
-
-    <p>
-      An aspiring Bioinformatician exploring the space where
-      biotechnology, biological data, Python and artificial
-      intelligence come together.
-    </p>
-
-    <div class="buttons">
-      <a class="btn primary" href="#projects">Explore My Work ↗</a>
-      <a class="btn" href="#about">Discover My Journey</a>
+  <!-- HUD HEADER & NAVIGATION -->
+  <header class="hud-header">
+    <div class="brand-container">
+      <div class="bio-hex-badge">DKS</div>
+      <div class="brand-info">
+        <h1 class="logo-title">D.K. SREEVIRIJA</h1>
+        <div class="system-status">
+          <span class="status-dot"></span>
+          <span>BIOCODE LAB // ONLINE &bull; GC: 51.4%</span>
+        </div>
+      </div>
     </div>
 
-    <div class="hero-tags">
-      <span class="tag">Biotechnology</span>
-      <span class="tag">Bioinformatics</span>
-      <span class="tag">Python</span>
-      <span class="tag">AI / ML</span>
+    <nav class="nav-links" id="mainNav">
+      <a href="#home">01 // NEXUS</a>
+      <a href="#lab">02 // LAB SANDBOX</a>
+      <a href="#journey">03 // PIPELINE</a>
+      <a href="#projects">04 // DOSSIERS</a>
+      <a href="#skills">05 // ARSENAL</a>
+      <a href="#experience">06 // CHRONICLES</a>
+      <a href="#contact">07 // TRANSMIT</a>
+    </nav>
+
+    <div class="header-actions">
+      <!-- LIGHT / DARK MODE TOGGLE (LIGHT BLUE / MIDNIGHT) -->
+      <button class="btn-theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Switch between Light Blue & Midnight Theme" aria-label="Toggle Theme">
+        <!-- SVG Theme Icon -->
+        <svg id="themeIconSun" class="svg-icon" viewBox="0 0 24 24" style="display:none;">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg id="themeIconMoon" class="svg-icon" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <span class="toggle-text" id="themeText">MIDNIGHT</span>
+      </button>
+
+      <!-- Web Audio SFX Toggle -->
+      <button class="audio-pill" id="sfxToggle" title="Toggle Synthesized Audio Feedback" aria-label="Toggle Audio Effects">
+        <span class="sound-bars">
+          <span class="sound-bar"></span>
+          <span class="sound-bar"></span>
+          <span class="sound-bar"></span>
+        </span>
+        <span id="sfxStatusText">SFX: OFF</span>
+      </button>
+
+      <button class="btn-terminal-trigger" onclick="focusBioTerminal()">
+        <svg class="svg-icon sm" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+        <span>LAB CLI</span>
+      </button>
+
+      <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Toggle Navigation">
+        <svg class="svg-icon" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
     </div>
-  </div>
-</section>
+  </header>
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="section-label">01 / THE PERSON BEHIND THE DATA</div>
-  <h2>Curious about life.<br>
-    <span class="highlight">Inspired by data.</span>
-  </h2>
-
-  <p class="intro">
-    I am D.K. Sreevirija, an integrated Biotechnology and
-    Bioinformatics student with an interest in computational
-    biology, machine learning and scientific problem-solving.
-    I enjoy learning how programming can help us understand
-    biological information and turn data into useful insights.
-  </p>
-
-  <div class="grid">
-    <div class="card">
-      <div class="number">01 / BIOLOGY</div>
-      <h3>Understand Life</h3>
-      <p>Exploring biotechnology, genomics and the science behind living systems.</p>
-    </div>
-
-    <div class="card">
-      <div class="number">02 / COMPUTATION</div>
-      <h3>Work With Data</h3>
-      <p>Learning Python and data-analysis tools to process and study information.</p>
-    </div>
-
-    <div class="card">
-      <div class="number">03 / INTELLIGENCE</div>
-      <h3>Build With AI</h3>
-      <p>Exploring machine learning models and practical software prototypes.</p>
-    </div>
-  </div>
-</section>
-
-<!-- JOURNEY -->
-<section id="journey">
-  <div class="section-label">02 / BUILDING A BIOINFORMATICIAN</div>
-  <h2>Every skill is another step.</h2>
-  <p class="intro">
-    My journey connects scientific knowledge with computational tools.
-  </p>
-
-  <div class="steps">
-    <div class="step">
-      <small>STAGE 01</small>
-      <h3>Biology</h3>
-      <p>Build a foundation in biotechnology and biological systems.</p>
-    </div>
-
-    <div class="step">
-      <small>STAGE 02</small>
-      <h3>Programming</h3>
-      <p>Use Python, NumPy and pandas to work with data.</p>
+  <!-- ==========================================================================
+       HERO SECTION: THE BIODIGITAL NEXUS (ANIMATED AVATAR + 3D DNA HELIX)
+       ========================================================================== -->
+  <section class="hero-section" id="home">
+    <!-- 3D WebGL Three.js Canvas / High-Performance 2D Canvas Fallback -->
+    <div id="dna-canvas-container">
+      <canvas id="dnaFallbackCanvas"></canvas>
     </div>
 
-    <div class="step">
-      <small>STAGE 03</small>
-      <h3>Machine Learning</h3>
-      <p>Explore classification, model evaluation and data-driven methods.</p>
+    <!-- Helix Base Identifier Overlay -->
+    <div class="helix-hud-overlay">
+      <span>NUCLEOTIDE BASES:</span>
+      <div class="base-legend">
+        <span class="base-dot a"></span> A
+        <span class="base-dot t"></span> T
+        <span class="base-dot g"></span> G
+        <span class="base-dot c"></span> C
+      </div>
     </div>
 
-    <div class="step">
-      <small>STAGE 04</small>
-      <h3>Bioinformatics</h3>
-      <p>Apply computational methods to biological datasets.</p>
+    <div class="hero-layout">
+      <!-- Left Column: Content -->
+      <div class="hero-content">
+        <div class="hud-tag">
+          <span class="hud-bracket">[</span>
+          BIOLOGICAL DATA &bull; PYTHON &bull; ARTIFICIAL INTELLIGENCE &bull; GENOMICS
+          <span class="hud-bracket">]</span>
+        </div>
+
+        <h1 class="hero-title">
+          DECIPHERING LIFE<br>
+          <span class="gradient-text">THROUGH CODE.</span>
+        </h1>
+
+        <div class="hero-subtitle">
+          <span>BIOINFORMATICIAN &bull; ML RESEARCHER</span>
+          <span class="sub-pill">INTEGRATED M.Sc. BIOTECH &amp; BIOINFORMATICS</span>
+        </div>
+
+        <p class="hero-description">
+          Hello! I am <strong>D.K. Sreevirija</strong>. I engineer computational solutions at the intersection of 
+          <strong>genomic sequences</strong>, <strong>machine learning algorithms</strong>, and <strong>biotechnology</strong>. 
+          Transforming biological data into predictive models and reproducible bioinformatics pipelines.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#lab" class="btn-biocode primary" onclick="playBeep(880)">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 2v7.31L4.69 17.5a2 2 0 0 0 1.71 3h11.2a2 2 0 0 0 1.71-3L14 9.31V2"></path><line x1="8" y1="2" x2="16" y2="2"></line></svg>
+            <span>LAUNCH VIRTUAL LAB</span>
+          </a>
+          <a href="#projects" class="btn-biocode secondary" onclick="playBeep(440)">
+            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            <span>INSPECT DOSSIERS</span>
+          </a>
+          <a href="#contact" class="btn-biocode ghost" onclick="playBeep(330)">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>TRANSMIT DISPATCH</span>
+          </a>
+        </div>
+
+        <!-- Real-Time Genomic Telemetry Strip -->
+        <div class="telemetry-strip">
+          <div class="telemetry-item">
+            <span class="telemetry-label">TARGET LOCUS</span>
+            <span class="telemetry-value">chr17q21.31</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">ML CLASSIFIER</span>
+            <span class="telemetry-value">ROC 0.984</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">PRIMARY STACK</span>
+            <span class="telemetry-value purple">Python / SciKit</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">SYSTEM UPTIME</span>
+            <span class="telemetry-value" id="runtimeClock">00:23:40</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Animated Image of D.K. Sreevirija -->
+      <div class="avatar-wrapper">
+        <div class="avatar-hologram-card" id="avatarCard">
+          <!-- Animated HUD Reticle Rings -->
+          <div class="avatar-reticle-ring"></div>
+          <div class="avatar-reticle-ring inner"></div>
+
+          <!-- Top-Left Telemetry Tag -->
+          <div class="avatar-hud-badge top-left">
+            <span class="status-dot"></span>
+            <span>RESEARCHER // D.K.S.</span>
+          </div>
+
+          <!-- Bottom-Right Telemetry Tag -->
+          <div class="avatar-hud-badge bottom-right">
+            <svg class="svg-icon sm" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <span>GENOMICS CORE</span>
+          </div>
+
+          <!-- Image Container with Hologram Scanline -->
+          <div class="avatar-image-container">
+            <div class="hologram-scanner"></div>
+            <img src="researcher_avatar.png" alt="D.K. Sreevirija - Bioinformatician & Computational Biology Researcher" class="avatar-image" loading="eager">
+          </div>
+
+          <!-- Card Footer Info -->
+          <div class="avatar-hud-footer">
+            <span class="avatar-name-label">D.K. SREEVIRIJA</span>
+            <span class="avatar-id-tag">ID: BIO-CORE // 2026-30</span>
+          </div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="step">
-      <small>STAGE 05</small>
-      <h3>Build Projects</h3>
-      <p>Turn ideas into documented and reproducible projects.</p>
-    </div>
-
-    <div class="step">
-      <small>NEXT STAGE</small>
-      <h3>Keep Discovering</h3>
-      <p>Continue developing skills in genomics and computational biology.</p>
-    </div>
-  </div>
-</section>
-
-<!-- SKILLS -->
-<section id="skills">
-  <div class="section-label">03 / MY TOOLKIT</div>
-  <h2>Tools I work with.</h2>
-  <p class="intro">
-    A growing collection of programming, data-science and development tools.
-  </p>
-
-  <div class="skill-list">
-    <span class="skill">Python</span>
-    <span class="skill">NumPy</span>
-    <span class="skill">pandas</span>
-    <span class="skill">scikit-learn</span>
-    <span class="skill">Machine Learning</span>
-    <span class="skill">Data Science</span>
-    <span class="skill">Git & GitHub</span>
-    <span class="skill">VS Code</span>
-    <span class="skill">Jupyter</span>
-    <span class="skill">Django</span>
-    <span class="skill">Excel</span>
-    <span class="skill">Teachable Machine</span>
-  </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="section-label">04 / EXPERIMENTS IN CODE</div>
-  <h2>Ideas turned into projects.</h2>
-  <p class="intro">
-    A selection of projects connecting data analysis, machine learning
-    and biological applications.
-  </p>
-
-  <div class="grid">
-    <div class="card">
-      <div class="number">PROJECT / 01</div>
-      <h3>Gene-Expression Classification</h3>
-      <p>
-        A biological-data project focused on preprocessing,
-        feature selection and supervised classification.
-      </p>
-      <ul>
-        <li>Python and NumPy</li>
-        <li>scikit-learn</li>
-        <li>Cross-validation and model evaluation</li>
-      </ul>
-      <p style="margin-top:16px;color:var(--accent)">
-        BIOLOGY + DATA
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="number">PROJECT / 02</div>
-      <h3>Interactive ML Demo</h3>
-      <p>
-        A lightweight demonstration combining Django and
-        Teachable Machine to illustrate a machine-learning workflow.
-      </p>
-      <ul>
-        <li>Interactive prototype</li>
-        <li>Web development</li>
-        <li>Project documentation</li>
-      </ul>
-      <p style="margin-top:16px;color:var(--accent)">
-        AI + DEVELOPMENT
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="number">PROJECT / 03</div>
-      <h3>What's Next?</h3>
-      <p>
-        My next goal is to create more reproducible bioinformatics
-        projects and explore biological datasets through code.
-      </p>
-      <ul>
-        <li>Genomics</li>
-        <li>Data visualization</li>
-        <li>Computational biology</li>
-      </ul>
-      <p style="margin-top:16px;color:var(--accent)">
-        CURRENT LEARNING GOALS
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- EXPERIENCE AND EDUCATION -->
-<section id="experience">
-  <div class="section-label">05 / MY BACKGROUND</div>
-  <h2>Learning. Applying. Growing.</h2>
-
-  <div class="timeline">
-    <div class="timeline-item">
-      <small class="highlight">JUNE – SEPTEMBER 2026</small>
-      <h3>AIML Intern — Exameets Skillverse</h3>
-      <p>
-        Worked on machine-learning models, data preprocessing,
-        feature engineering, GitHub collaboration and a Django-based
-        demonstration prototype.
+  <!-- ==========================================================================
+       SECTION 01: THE INTERACTIVE "BIOCODE VIRTUAL LAB" (SANDBOX)
+       ========================================================================== -->
+  <section id="lab">
+    <div class="section-header">
+      <div class="section-eyebrow">LABORATORY EXPERIMENTATION SUITE</div>
+      <h2 class="section-title">Interactive <span class="accent">BioCode Sandbox</span></h2>
+      <p class="section-desc">
+        Test computational biology tenets directly in your browser. Transcribe sequences, 
+        simulate oncogenic machine learning classifiers, and execute queries in the in-silico CLI.
       </p>
     </div>
 
-    <div class="timeline-item">
-      <small class="highlight">2026 – 2030</small>
-      <h3>Integrated M.Sc. — Biotechnology & Bioinformatics</h3>
-      <p>
-        Currently pursuing an integrated degree, building knowledge
-        for a future in bioinformatics and computational biology.
+    <div class="lab-container">
+      <!-- Lab Tab Navigation Sidebar -->
+      <div class="lab-navigation">
+        <button class="lab-tab-btn active" onclick="switchLabTab('dogma')" id="tab-btn-dogma">
+          <div class="lab-tab-title">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 12c0-4.4 3.6-8 8-8s8 3.6 8 8-3.6 8-8 8-8-3.6-8-8zm2-4h12M6 16h12M8 8v8M16 8v8"></path></svg>
+            <span>CENTRAL DOGMA ENGINE</span>
+          </div>
+          <div class="lab-tab-desc">DNA replication, mRNA transcription, codon translation &amp; GC content.</div>
+        </button>
+
+        <button class="lab-tab-btn" onclick="switchLabTab('classifier')" id="tab-btn-classifier">
+          <div class="lab-tab-title">
+            <svg class="svg-icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+            <span>AI ONCO-CLASSIFIER</span>
+          </div>
+          <div class="lab-tab-desc">Simulate RNA-seq biomarker levels and predict tumor phenotypes.</div>
+        </button>
+
+        <button class="lab-tab-btn" onclick="switchLabTab('terminal')" id="tab-btn-terminal">
+          <div class="lab-tab-title">
+            <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+            <span>BIOCODE CLI TERMINAL</span>
+          </div>
+          <div class="lab-tab-desc">Command-line interface with mock BLAST, alignment &amp; tool scripts.</div>
+        </button>
+      </div>
+
+      <!-- Lab Workspace Panel -->
+      <div class="lab-workspace biocode-panel hud-corners">
+        
+        <!-- ================= TAB 1: CENTRAL DOGMA ENGINE ================= -->
+        <div id="lab-tab-dogma" class="lab-tab-content">
+          <div class="workspace-header">
+            <h3 class="workspace-title">Central Dogma Sequence Transcriber</h3>
+            <div class="preset-selector">
+              <span class="preset-label">PRESETS:</span>
+              <button class="preset-btn" onclick="loadSequencePreset('insulin')">Insulin (INS)</button>
+              <button class="preset-btn" onclick="loadSequencePreset('p53')">TP53 Exon</button>
+              <button class="preset-btn" onclick="loadSequencePreset('gfp')">GFP Fluorescent</button>
+            </div>
+          </div>
+
+          <div class="sequence-input-group">
+            <div class="sequence-input-label">
+              <span>INPUT 5' &rarr; 3' SENSE DNA SEQUENCE:</span>
+              <span id="seqLenCounter">LENGTH: 30 bp</span>
+            </div>
+            <textarea id="dnaInput" class="sequence-textarea" spellcheck="false" placeholder="Enter DNA Sequence (A, T, G, C)...">ATGGCCCTGTGGATGCGCCTCCTGCCCCTG</textarea>
+          </div>
+
+          <div class="lab-controls-row">
+            <button class="btn-control primary-run" onclick="executeCentralDogma()">
+              <svg class="svg-icon sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              <span>TRANSCRIBE &amp; TRANSLATE</span>
+            </button>
+            <button class="btn-control" onclick="mutateRandomBase()">
+              <svg class="svg-icon sm" viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+              <span>POINT MUTATION</span>
+            </button>
+            <button class="btn-control" onclick="reverseComplementSeq()">
+              <svg class="svg-icon sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+              <span>REVERSE COMPLEMENT</span>
+            </button>
+          </div>
+
+          <!-- Flow Stages Breakdown -->
+          <div class="flow-stages">
+            <!-- Complementary DNA -->
+            <div class="flow-card">
+              <div class="flow-card-head">
+                <span class="flow-badge">3' &rarr; 5' ANTISENSE DNA STRAND</span>
+                <span class="flow-meta">Hydrogen Bond Pairing</span>
+              </div>
+              <div class="sequence-display" id="dnaComplementDisplay"></div>
+            </div>
+
+            <!-- mRNA -->
+            <div class="flow-card">
+              <div class="flow-card-head">
+                <span class="flow-badge mrna">5' &rarr; 3' TRANSCRIPTION (mRNA)</span>
+                <span class="flow-meta">Uracil Substitution</span>
+              </div>
+              <div class="sequence-display" id="mrnaDisplay"></div>
+            </div>
+
+            <!-- Protein Polypeptide -->
+            <div class="flow-card">
+              <div class="flow-card-head">
+                <span class="flow-badge protein">TRANSLATED POLYPEPTIDE CHAIN (CODONS)</span>
+                <span class="flow-meta" id="proteinLengthMeta">10 Residues</span>
+              </div>
+              <div class="sequence-display" id="proteinDisplay" style="flex-wrap: wrap; height: auto;"></div>
+            </div>
+          </div>
+
+          <!-- Dynamic Nucleic Metrics -->
+          <div class="lab-metrics-grid">
+            <div class="metric-box">
+              <small>GC CONTENT</small>
+              <strong id="gcPctVal">66.7%</strong>
+              <div class="gc-bar-track">
+                <div class="gc-bar-fill" id="gcBarFill" style="width: 66.7%;"></div>
+              </div>
+            </div>
+            <div class="metric-box">
+              <small>MOLECULAR WEIGHT</small>
+              <strong id="molWeightVal">9.45 kDa</strong>
+            </div>
+            <div class="metric-box">
+              <small>ESTIMATED ISOELECTRIC (pI)</small>
+              <strong id="pIVal">6.12 pH</strong>
+            </div>
+            <div class="metric-box">
+              <small>TOTAL CODONS</small>
+              <strong id="codonCountVal">10 AA</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 2: AI GENE EXPRESSION CLASSIFIER ================= -->
+        <div id="lab-tab-classifier" class="lab-tab-content" style="display: none;">
+          <div class="workspace-header">
+            <h3 class="workspace-title">Oncogenic Gene-Expression Biomarker Simulator</h3>
+            <span class="preset-label" style="color:var(--cyan-bright)">MODEL: Random Forest &amp; SVM Ensemble</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px;">
+            Simulating high-throughput RNA-Seq normalized counts (FPKM). Adjust biomarker sliders to witness live classification inference based on trained multidimensional decision boundaries:
+          </p>
+
+          <div class="classifier-grid">
+            <div class="gene-slider-card">
+              <!-- Slider 1: TP53 -->
+              <div class="gene-slider-row">
+                <div class="gene-slider-head">
+                  <span class="gene-name">TP53 (Tumor Suppressor)</span>
+                  <span class="gene-fpkm" id="val-tp53">48 FPKM</span>
+                </div>
+                <input type="range" class="gene-range" id="range-tp53" min="0" max="100" value="48" oninput="runClassifierSimulation()">
+              </div>
+
+              <!-- Slider 2: BRCA1 -->
+              <div class="gene-slider-row">
+                <div class="gene-slider-head">
+                  <span class="gene-name">BRCA1 (DNA Repair / Fanconi)</span>
+                  <span class="gene-fpkm" id="val-brca1">35 FPKM</span>
+                </div>
+                <input type="range" class="gene-range" id="range-brca1" min="0" max="100" value="35" oninput="runClassifierSimulation()">
+              </div>
+
+              <!-- Slider 3: EGFR -->
+              <div class="gene-slider-row">
+                <div class="gene-slider-head">
+                  <span class="gene-name">EGFR (Growth Receptor Kinase)</span>
+                  <span class="gene-fpkm" id="val-egfr">22 FPKM</span>
+                </div>
+                <input type="range" class="gene-range" id="range-egfr" min="0" max="100" value="22" oninput="runClassifierSimulation()">
+              </div>
+
+              <!-- Slider 4: MYC -->
+              <div class="gene-slider-row">
+                <div class="gene-slider-head">
+                  <span class="gene-name">MYC (Cell Proliferation Factor)</span>
+                  <span class="gene-fpkm" id="val-myc">18 FPKM</span>
+                </div>
+                <input type="range" class="gene-range" id="range-myc" min="0" max="100" value="18" oninput="runClassifierSimulation()">
+              </div>
+
+              <div style="margin-top: 15px; display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="preset-btn" onclick="setClassifierSample(12, 18, 85, 78)">Simulate Basal Subtype</button>
+                <button class="preset-btn" onclick="setClassifierSample(65, 55, 14, 12)">Simulate Normal Tissue</button>
+              </div>
+            </div>
+
+            <div class="ai-inference-result">
+              <div class="inference-verdict-box">
+                <div class="verdict-tag">// CLASSIFICATION INFERENCE</div>
+                <div class="verdict-main" id="inferenceVerdict">NORMAL TISSUE HOMEOSTASIS</div>
+                <div class="verdict-confidence" id="inferenceConfidence">Confidence: 94.6% &bull; Low Oncogenic Risk</div>
+              </div>
+
+              <div style="margin-top: 16px; background: var(--bg-void); padding: 12px; border-radius: 6px;">
+                <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; margin-bottom: 6px;">
+                  <span>PROBABILITY DISTRIBUTION</span>
+                  <span style="color:var(--cyan-neon)">p-value &lt; 0.001</span>
+                </div>
+                <div class="gc-bar-track" style="height: 8px;">
+                  <div class="gc-bar-fill" id="riskBarFill" style="width: 25%; background: var(--dna-a);"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--text-dim); margin-top: 4px;">
+                  <span>Benign Baseline</span>
+                  <span>Hyperplastic Profile</span>
+                  <span>Malignant Signatures</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 3: IN-SILICO CLI TERMINAL ================= -->
+        <div id="lab-tab-terminal" class="lab-tab-content" style="display: none;">
+          <div class="lab-terminal-window">
+            <div class="terminal-bar">
+              <div class="terminal-dots">
+                <span class="term-dot red"></span>
+                <span class="term-dot yellow"></span>
+                <span class="term-dot green"></span>
+              </div>
+              <div class="terminal-title">biocode-os // bash v5.2 -- 80x24</div>
+              <div style="font-size: 10px; color: var(--cyan-neon);">SYS: OK</div>
+            </div>
+
+            <div class="terminal-body" id="terminalBody">
+              <div class="term-line term-success">[BIOCODE KERNEL INITIALIZED] Ready for bioinformatic queries.</div>
+              <div class="term-line term-output">Type <span class="term-highlight">help</span> to inspect available biological sub-commands.</div>
+              <div class="term-line term-output">Try: <span class="term-highlight">blast</span>, <span class="term-highlight">dogma</span>, <span class="term-highlight">projects</span>, <span class="term-highlight">skills</span>, <span class="term-highlight">stats</span>, <span class="term-highlight">contact</span></div>
+              <div class="term-line"><span class="term-prompt">sreevirija@biocode:~$</span> <span class="term-output">whoami</span></div>
+              <div class="term-line term-highlight">D.K. Sreevirija &mdash; Bioinformatician &amp; Computational Biology Researcher</div>
+            </div>
+
+            <div class="terminal-input-row">
+              <span class="term-prompt">sreevirija@biocode:~$</span>
+              <input type="text" id="terminalInput" class="term-input" placeholder="Type a command and press Enter..." autocomplete="off">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 02: THE COMPELLING JOURNEY (DATA -> COMPUTATIONAL BIOLOGY)
+       ========================================================================== -->
+  <section id="journey">
+    <div class="section-header">
+      <div class="section-eyebrow">METHODOLOGICAL PROGRESSION</div>
+      <h2 class="section-title">The Journey from <span class="accent">Biological Data</span> to AI</h2>
+      <p class="section-desc">
+        How biological phenomena in the cell are transformed into digital strings, structured feature matrices, 
+        and predictive machine learning models. Click any node to inspect the computational bridge:
       </p>
     </div>
 
-    <div class="timeline-item">
-      <small class="highlight">2023 – 2025</small>
-      <h3>Intermediate — Science</h3>
-      <p>Sri Chaitanya Junior College.</p>
+    <!-- 6-Stage Interactive Matrix -->
+    <div class="pipeline-grid">
+      
+      <!-- Stage 1 -->
+      <div class="pipeline-node active-stage" onclick="inspectStage(1)">
+        <div class="stage-number">
+          <span>STAGE 01</span>
+          <span class="stage-badge">WET-LAB</span>
+        </div>
+        <h3>Molecular Systems &amp; Wet-Lab</h3>
+        <p>Understanding DNA, RNA, proteins, gel electrophoresis, PCR amplification, and the raw biochemistry of cellular life.</p>
+        <div class="stage-tech-tags">
+          <span class="tech-micro-tag">Biotechnology</span>
+          <span class="tech-micro-tag">Genetics</span>
+          <span class="tech-micro-tag">Cell Biology</span>
+        </div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="pipeline-node" onclick="inspectStage(2)">
+        <div class="stage-number">
+          <span>STAGE 02</span>
+          <span class="stage-badge">HIGH-THROUGHPUT</span>
+        </div>
+        <h3>Next-Gen Sequencing (NGS)</h3>
+        <p>Converting biochemical strands into digital files: FASTQ base-calling, Phred quality scoring, and short-read alignment.</p>
+        <div class="stage-tech-tags">
+          <span class="tech-micro-tag">FASTQ / FASTA</span>
+          <span class="tech-micro-tag">SAM / BAM</span>
+          <span class="tech-micro-tag">Phred Q-Scores</span>
+        </div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="pipeline-node" onclick="inspectStage(3)">
+        <div class="stage-number">
+          <span>STAGE 03</span>
+          <span class="stage-badge">DATA ENGINEERING</span>
+        </div>
+        <h3>Python &amp; Data Wrangling</h3>
+        <p>Parsing raw biological datasets with Python, NumPy matrices, and Pandas dataframes. Handling missing reads and normalization.</p>
+        <div class="stage-tech-tags">
+          <span class="tech-micro-tag">Python 3</span>
+          <span class="tech-micro-tag">Pandas</span>
+          <span class="tech-micro-tag">NumPy</span>
+        </div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="pipeline-node" onclick="inspectStage(4)">
+        <div class="stage-number">
+          <span>STAGE 04</span>
+          <span class="stage-badge">STATISTICS &amp; ML</span>
+        </div>
+        <h3>Machine Learning &amp; Biomarkers</h3>
+        <p>Training classification and regression models. Dimensionality reduction (PCA, t-SNE) and feature selection for oncogene detection.</p>
+        <div class="stage-tech-tags">
+          <span class="tech-micro-tag">Scikit-Learn</span>
+          <span class="tech-micro-tag">Random Forest</span>
+          <span class="tech-micro-tag">PCA / t-SNE</span>
+        </div>
+      </div>
+
+      <!-- Stage 5 -->
+      <div class="pipeline-node" onclick="inspectStage(5)">
+        <div class="stage-number">
+          <span>STAGE 05</span>
+          <span class="stage-badge">STRUCTURAL BIO</span>
+        </div>
+        <h3>Structural &amp; Sequence Informatics</h3>
+        <p>Applying Biopython, local BLAST sequence alignments, PDB 3D macromolecular coordinate analysis, and folding heuristics.</p>
+        <div class="stage-tech-tags">
+          <span class="tech-micro-tag">Biopython</span>
+          <span class="tech-micro-tag">BLAST API</span>
+          <span class="tech-micro-tag">PDB Coordinates</span>
+        </div>
+      </div>
+
+      <!-- Stage 6 -->
+      <div class="pipeline-node" onclick="inspectStage(6)">
+        <div class="stage-number">
+          <span>STAGE 06</span>
+          <span class="stage-badge">TRANSLATIONAL</span>
+        </div>
+        <h3>Translational AI &amp; Discovery</h3>
+        <p>Deploying interactive diagnostic prototypes, reproducible pipelines, and intelligent tools to accelerate precision medicine.</p>
+        <div class="stage-tech-tags">
+          <span class="tech-micro-tag">Django API</span>
+          <span class="tech-micro-tag">Reproducibility</span>
+          <span class="tech-micro-tag">Precision Medicine</span>
+        </div>
+      </div>
+
     </div>
 
-    <div class="timeline-item">
-      <small class="highlight">2022 – 2023</small>
-      <h3>Secondary School</h3>
-      <p>Sri Sai Krishna School, Kadapa.</p>
+    <!-- Interactive Inspector Box for Selected Stage -->
+    <div class="journey-inspector biocode-panel" id="journeyInspector">
+      <div class="inspector-header">
+        <div class="inspector-title" id="inspectorTitle">
+          <span>STAGE 01 INSPECTION:</span> Molecular Foundations to Digital Data
+        </div>
+        <span class="stage-badge" id="inspectorBadge">WET-LAB ESSENTIALS</span>
+      </div>
+
+      <div class="inspector-grid">
+        <div class="inspector-bio-col">
+          <h4>BIOLOGICAL FOUNDATION &amp; CHALLENGE</h4>
+          <p id="inspectorBioText">
+            All computational bioinformatics stems from the double helix. Living cells store hereditary information across 
+            adenine (A), thymine (T), guanine (G), and cytosine (C). Before any algorithm can predict disease phenotypes, 
+            we must comprehend how wet-lab extraction, PCR amplification, and enzymic cleavage affect the biological sample.
+          </p>
+        </div>
+
+        <div class="inspector-code-col">
+          <h4>COMPUTATIONAL SOLUTION &amp; PYTHON CODE</h4>
+          <div class="code-snippet-box" id="inspectorCodeSnippet">
+# Biopython: Reading and validating nucleic sequences
+from Bio.Seq import Seq
+
+raw_dna = Seq("ATGGCCCTGTGGATGCGCCTCCTGCCCCTG")
+mrna = raw_dna.transcribe()
+protein = raw_dna.translate()
+
+print(f"Transcript: {mrna}")
+print(f"Translated: {protein} (Len: {len(protein)})")
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 03: UNIQUE PROJECT SHOWCASE (LABORATORY DOSSIERS)
+       ========================================================================== -->
+  <section id="projects">
+    <div class="section-header">
+      <div class="section-eyebrow">RESEARCH ARCHIVE &amp; EXPERIMENTS</div>
+      <h2 class="section-title">Laboratory <span class="accent">Project Dossiers</span></h2>
+      <p class="section-desc">
+        Engineered experiments spanning machine-learning classification, web diagnostic interfaces, 
+        protein profiling, and bioinformatics algorithms:
+      </p>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="project-filter-row">
+      <button class="filter-btn active" onclick="filterProjects('all')">ALL EXPERIMENTS (05)</button>
+      <button class="filter-btn" onclick="filterProjects('aiml')">AI / MACHINE LEARNING</button>
+      <button class="filter-btn" onclick="filterProjects('bio')">GENOMICS &amp; BIOINFORMATICS</button>
+      <button class="filter-btn" onclick="filterProjects('web')">SYSTEMS &amp; WEB DEMOS</button>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="projects-grid">
+      
+      <!-- Project 1: Gene-Expression Classification -->
+      <div class="project-card biocode-panel hud-corners" data-cat="aiml bio">
+        <div class="project-card-header">
+          <span class="project-dossier-id">DOSSIER // EXP-01</span>
+          <span class="project-category-badge">AI + GENOMICS</span>
+        </div>
+        <div class="project-card-body">
+          <h3 class="project-title">Gene-Expression Classifier &amp; Biomarker Discovery</h3>
+          <p class="project-desc">
+            A high-dimensional microarray data project focused on preprocessing, variance thresholding, 
+            and supervised classification across thousands of expression markers.
+          </p>
+          <div class="project-telemetry-stats">
+            <div class="p-stat-item">
+              <span class="p-stat-label">ACCURACY METRIC</span>
+              <span class="p-stat-val">ROC-AUC 0.984</span>
+            </div>
+            <div class="p-stat-item">
+              <span class="p-stat-label">VALIDATION</span>
+              <span class="p-stat-val">5-Fold Stratified</span>
+            </div>
+          </div>
+          <div class="project-stack">
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">scikit-learn</span>
+            <span class="stack-tag">NumPy</span>
+            <span class="stack-tag">Pandas</span>
+            <span class="stack-tag">PCA</span>
+          </div>
+        </div>
+        <div class="project-card-footer">
+          <button class="btn-inspect" onclick="openDossierModal('exp01')">
+            <span>INSPECT DOSSIER</span> &rarr;
+          </button>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">STATUS: COMPLETE</span>
+        </div>
+      </div>
+
+      <!-- Project 2: Interactive ML Demo -->
+      <div class="project-card biocode-panel hud-corners" data-cat="aiml web">
+        <div class="project-card-header">
+          <span class="project-dossier-id">DOSSIER // EXP-02</span>
+          <span class="project-category-badge">AI + WEB SYSTEMS</span>
+        </div>
+        <div class="project-card-body">
+          <h3 class="project-title">Interactive Diagnostic Demo &amp; Vision Prototype</h3>
+          <p class="project-desc">
+            A lightweight full-stack demonstration combining Django backend services with Google Teachable 
+            Machine to illustrate real-time computer vision inference workflows.
+          </p>
+          <div class="project-telemetry-stats">
+            <div class="p-stat-item">
+              <span class="p-stat-label">INFERENCE LATENCY</span>
+              <span class="p-stat-val">&lt; 115 ms</span>
+            </div>
+            <div class="p-stat-item">
+              <span class="p-stat-label">ARCHITECTURE</span>
+              <span class="p-stat-val">Django REST</span>
+            </div>
+          </div>
+          <div class="project-stack">
+            <span class="stack-tag">Django</span>
+            <span class="stack-tag">Teachable Machine</span>
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">JavaScript</span>
+          </div>
+        </div>
+        <div class="project-card-footer">
+          <button class="btn-inspect" onclick="openDossierModal('exp02')">
+            <span>INSPECT DOSSIER</span> &rarr;
+          </button>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">STATUS: COMPLETE</span>
+        </div>
+      </div>
+
+      <!-- Project 3: HelixFold-Lite -->
+      <div class="project-card biocode-panel hud-corners" data-cat="bio">
+        <div class="project-card-header">
+          <span class="project-dossier-id">DOSSIER // EXP-03</span>
+          <span class="project-category-badge">STRUCTURAL BIO</span>
+        </div>
+        <div class="project-card-body">
+          <h3 class="project-title">HelixFold-Lite: Protein Secondary Structure Profiler</h3>
+          <p class="project-desc">
+            Algorithmic physicochemical feature extraction pipeline. Computes amino-acid hydropathy scores, 
+            isoelectric points, and Chou-Fasman secondary structure propensities.
+          </p>
+          <div class="project-telemetry-stats">
+            <div class="p-stat-item">
+              <span class="p-stat-label">RESIDUE MAPPING</span>
+              <span class="p-stat-val">20 Amino Acids</span>
+            </div>
+            <div class="p-stat-item">
+              <span class="p-stat-label">PROFILING SPEED</span>
+              <span class="p-stat-val">12,000 AA / sec</span>
+            </div>
+          </div>
+          <div class="project-stack">
+            <span class="stack-tag">Biopython</span>
+            <span class="stack-tag">Kyte-Doolittle</span>
+            <span class="stack-tag">Matplotlib</span>
+            <span class="stack-tag">Python</span>
+          </div>
+        </div>
+        <div class="project-card-footer">
+          <button class="btn-inspect" onclick="openDossierModal('exp03')">
+            <span>INSPECT DOSSIER</span> &rarr;
+          </button>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">STATUS: ACTIVE DEV</span>
+        </div>
+      </div>
+
+      <!-- Project 4: CRISPR gRNA Finder -->
+      <div class="project-card biocode-panel hud-corners" data-cat="bio aiml">
+        <div class="project-card-header">
+          <span class="project-dossier-id">DOSSIER // EXP-04</span>
+          <span class="project-category-badge">GENOMIC EDITING</span>
+        </div>
+        <div class="project-card-body">
+          <h3 class="project-title">CRISPR-Scan: In-Silico Guide RNA &amp; PAM Finder</h3>
+          <p class="project-desc">
+            Automated SpCas9 PAM site recognition (`NGG`) across eukaryotic exon targets, calculating 
+            on-target cleavage efficiency scores and mismatch penalties.
+          </p>
+          <div class="project-telemetry-stats">
+            <div class="p-stat-item">
+              <span class="p-stat-label">PAM PATTERN</span>
+              <span class="p-stat-val">5'-NGG-3'</span>
+            </div>
+            <div class="p-stat-item">
+              <span class="p-stat-label">ALGORITHM</span>
+              <span class="p-stat-val">K-mer Indexing</span>
+            </div>
+          </div>
+          <div class="project-stack">
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">String Algorithms</span>
+            <span class="stack-tag">Bioinformatics</span>
+            <span class="stack-tag">NumPy</span>
+          </div>
+        </div>
+        <div class="project-card-footer">
+          <button class="btn-inspect" onclick="openDossierModal('exp04')">
+            <span>INSPECT DOSSIER</span> &rarr;
+          </button>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">STATUS: COMPLETE</span>
+        </div>
+      </div>
+
+      <!-- Project 5: scRNA-Seq Explorer -->
+      <div class="project-card biocode-panel hud-corners" data-cat="bio aiml web">
+        <div class="project-card-header">
+          <span class="project-dossier-id">DOSSIER // EXP-05</span>
+          <span class="project-category-badge">SINGLE-CELL OMICS</span>
+        </div>
+        <div class="project-card-body">
+          <h3 class="project-title">Single-Cell Transcriptome Cluster Visualizer</h3>
+          <p class="project-desc">
+            Dimensionality reduction and unsupervised clustering (K-Means &amp; DBSCAN) pipeline for 
+            resolving cell-type heterogeneity across thousands of single-cell RNA-seq libraries.
+          </p>
+          <div class="project-telemetry-stats">
+            <div class="p-stat-item">
+              <span class="p-stat-label">DIM REDUCTION</span>
+              <span class="p-stat-val">t-SNE &amp; UMAP</span>
+            </div>
+            <div class="p-stat-item">
+              <span class="p-stat-label">CELL RESOLUTION</span>
+              <span class="p-stat-val">10,000 Cells</span>
+            </div>
+          </div>
+          <div class="project-stack">
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">t-SNE</span>
+            <span class="stack-tag">scikit-learn</span>
+            <span class="stack-tag">Seaborn</span>
+          </div>
+        </div>
+        <div class="project-card-footer">
+          <button class="btn-inspect" onclick="openDossierModal('exp05')">
+            <span>INSPECT DOSSIER</span> &rarr;
+          </button>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">STATUS: ACTIVE DEV</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Deep Dossier Modal Popup -->
+  <div class="dossier-modal-backdrop" id="dossierModalBackdrop" onclick="closeDossierModalOnBackdrop(event)">
+    <div class="dossier-modal hud-corners" id="dossierModalContent">
+      <button class="modal-close-btn" onclick="closeDossierModal()">&times;</button>
+      <div id="modalInnerContent">
+        <!-- Injected via JavaScript -->
+      </div>
     </div>
   </div>
-</section>
 
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="section-label">06 / LET'S CONNECT</div>
-  <h2>Let's turn data into discovery.</h2>
-  <p>
-    Interested in bioinformatics, biological data, AI/ML or
-    collaborative projects? I'd be happy to connect.
-  </p>
+  <!-- ==========================================================================
+       SECTION 04: COMPUTATIONAL & BIOLOGICAL ARSENAL (SKILLS)
+       ========================================================================== -->
+  <section id="skills">
+    <div class="section-header">
+      <div class="section-eyebrow">CAPABILITY INVENTORY</div>
+      <h2 class="section-title">The Bioinformatician's <span class="accent">Arsenal</span></h2>
+      <p class="section-desc">
+        A calibrated synthesis of programming languages, machine learning frameworks, 
+        computational biology software, and wet-lab principles:
+      </p>
+    </div>
 
-  <div class="buttons" style="justify-content:center">
-    <a class="btn primary"
-       href="mailto:dksreevirija876@gmail.com">
-       Email Me ↗
-    </a>
+    <div class="arsenal-grid">
+      
+      <!-- Category 1: Languages & Core Tools -->
+      <div class="arsenal-card biocode-panel hud-corners">
+        <div class="arsenal-category-head">
+          <span class="category-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+          </span>
+          <span>PROGRAMMING &amp; CORE</span>
+        </div>
+        <div class="skill-bars-list">
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Python 3 (Bio Core)</span>
+              <span class="skill-bar-pct">92%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 92%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">NumPy &amp; Vectorization</span>
+              <span class="skill-bar-pct">88%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 88%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Pandas Dataframes</span>
+              <span class="skill-bar-pct">90%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 90%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Git &amp; GitHub Versioning</span>
+              <span class="skill-bar-pct">85%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 85%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 2: Machine Learning & AI -->
+      <div class="arsenal-card biocode-panel hud-corners">
+        <div class="arsenal-category-head">
+          <span class="category-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          </span>
+          <span>AI &amp; MACHINE LEARNING</span>
+        </div>
+        <div class="skill-bars-list">
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">scikit-learn Models</span>
+              <span class="skill-bar-pct">86%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill purple" style="width: 86%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Classification &amp; Metrics</span>
+              <span class="skill-bar-pct">89%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill purple" style="width: 89%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Feature Engineering / PCA</span>
+              <span class="skill-bar-pct">82%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill purple" style="width: 82%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Teachable Machine &amp; CV</span>
+              <span class="skill-bar-pct">84%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill purple" style="width: 84%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 3: Bioinformatics & Genomics -->
+      <div class="arsenal-card biocode-panel hud-corners">
+        <div class="arsenal-category-head">
+          <span class="category-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="20" y2="20"></line><line x1="6" y1="9" x2="6" y2="15"></line></svg>
+          </span>
+          <span>BIOINFORMATICS &amp; OMICS</span>
+        </div>
+        <div class="skill-bars-list">
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Biopython Parsing</span>
+              <span class="skill-bar-pct">87%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 87%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Sequence Alignment (BLAST)</span>
+              <span class="skill-bar-pct">83%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 83%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">PDB Structural Analysis</span>
+              <span class="skill-bar-pct">80%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 80%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Gene Expression / RNA-Seq</span>
+              <span class="skill-bar-pct">85%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 85%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 4: Web, Systems & Wet-Lab -->
+      <div class="arsenal-card biocode-panel hud-corners">
+        <div class="arsenal-category-head">
+          <span class="category-icon">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </span>
+          <span>SYSTEMS &amp; WET-LAB</span>
+        </div>
+        <div class="skill-bars-list">
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Django Web Applications</span>
+              <span class="skill-bar-pct">78%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill purple" style="width: 78%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Molecular Biotechnology</span>
+              <span class="skill-bar-pct">90%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 90%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Jupyter Labs &amp; VS Code</span>
+              <span class="skill-bar-pct">94%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 94%;"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header">
+              <span class="skill-bar-name">Genetics &amp; Recombinant DNA</span>
+              <span class="skill-bar-pct">89%</span>
+            </div>
+            <div class="skill-track"><div class="skill-fill" style="width: 89%;"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 05: CHRONICLES & BACKGROUND (LOGS & TIMELINE)
+       ========================================================================== -->
+  <section id="experience">
+    <div class="section-header" style="text-align: center;">
+      <div class="section-eyebrow" style="justify-content: center;">CAREER LOGS &amp; MILESTONES</div>
+      <h2 class="section-title">The Scientific <span class="accent">Chronicles</span></h2>
+      <p class="section-desc" style="margin: 10px auto 0;">
+        Tracing the educational trajectory and research internships forging my career in computational biology:
+      </p>
+    </div>
+
+    <div class="chronicles-container">
+      <div class="chronicles-timeline">
+        
+        <!-- Log 1: AIML Intern -->
+        <div class="log-item">
+          <div class="log-node-dot current"></div>
+          <div class="log-card hud-corners">
+            <div class="log-meta-row">
+              <span class="log-date">JUNE 2026 &mdash; SEPTEMBER 2026</span>
+              <span class="log-badge">INTERNSHIP</span>
+            </div>
+            <h3 class="log-title">AIML Intern &mdash; Exameets Skillverse</h3>
+            <div class="log-institution">Research &amp; Machine Learning Engineering</div>
+            <p class="log-desc">
+              Engineered machine learning pipelines focusing on supervised classification, high-dimensional biological data preprocessing, 
+              robust feature selection, and model evaluation metrics (Confusion Matrix, ROC-AUC). Developed a full-stack interactive demonstration 
+              integrating Django with Teachable Machine prototypes and maintained version-controlled team collaboration via GitHub.
+            </p>
+          </div>
+        </div>
+
+        <!-- Log 2: Integrated M.Sc. -->
+        <div class="log-item">
+          <div class="log-node-dot current"></div>
+          <div class="log-card hud-corners">
+            <div class="log-meta-row">
+              <span class="log-date">2026 &mdash; 2030 (CURRENT)</span>
+              <span class="log-badge">ACADEMIC PROGRAM</span>
+            </div>
+            <h3 class="log-title">Integrated M.Sc. in Biotechnology &amp; Bioinformatics</h3>
+            <div class="log-institution">Higher Education / Degree Specialization</div>
+            <p class="log-desc">
+              Rigorous 5-year integrated curriculum synchronizing core molecular biotechnology, genetic engineering, recombinant DNA technology, 
+              and microbiology with advanced computational sciences &mdash; Python programming, biological sequence analysis, structural biology, 
+              and machine learning.
+            </p>
+          </div>
+        </div>
+
+        <!-- Log 3: Intermediate Science -->
+        <div class="log-item">
+          <div class="log-node-dot"></div>
+          <div class="log-card">
+            <div class="log-meta-row">
+              <span class="log-date">2023 &mdash; 2025</span>
+              <span class="log-badge">FOUNDATIONAL</span>
+            </div>
+            <h3 class="log-title">Intermediate &mdash; Science &amp; Biology</h3>
+            <div class="log-institution">Sri Chaitanya Junior College</div>
+            <p class="log-desc">
+              Intensive training in Botany, Zoology, Physics, and Chemistry. Developed deep foundational curiosity for cellular architecture, 
+              enzymology, and mathematical reasoning in living systems.
+            </p>
+          </div>
+        </div>
+
+        <!-- Log 4: Secondary School -->
+        <div class="log-item">
+          <div class="log-node-dot"></div>
+          <div class="log-card">
+            <div class="log-meta-row">
+              <span class="log-date">2022 &mdash; 2023</span>
+              <span class="log-badge">SECONDARY</span>
+            </div>
+            <h3 class="log-title">Secondary School Certificate</h3>
+            <div class="log-institution">Sri Sai Krishna School, Kadapa</div>
+            <p class="log-desc">
+              Graduated with stellar academic performance in science and mathematics, planting the seeds for scientific research and problem-solving.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION 06: TRANSMISSION / CONTACT CONSOLE
+       ========================================================================== -->
+  <section id="contact">
+    <div class="contact-wrapper hud-corners">
+      <div class="transmission-header">
+        <div class="section-eyebrow" style="justify-content: center;">SECURE COMMUNICATION UPLINK</div>
+        <h3>Initiate Research Transmission</h3>
+        <p>
+          Open to bioinformatics research collaborations, AI/ML internships, computational biology projects, 
+          and academic discussions. Let's turn biological data into actionable discoveries.
+        </p>
+      </div>
+
+      <form id="contactForm" onsubmit="handleTransmission(event)">
+        <div class="contact-form-grid">
+          <div class="form-group">
+            <label class="form-label" for="senderName">OPERATOR NAME / AFFILIATION</label>
+            <input type="text" id="senderName" class="form-input" placeholder="e.g. Dr. Jane Doe / Genomics Lab" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="senderEmail">RETURN TRANSMISSION EMAIL</label>
+            <input type="email" id="senderEmail" class="form-input" placeholder="e.g. jdoe@institution.edu" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="subjectSelect">PROJECT / RESEARCH TOPIC</label>
+            <select id="subjectSelect" class="form-select">
+              <option value="Bioinformatics Research Collaboration">Bioinformatics Research Collaboration</option>
+              <option value="Machine Learning / Internship Opportunity">Machine Learning / Internship Opportunity</option>
+              <option value="Genomic Data Science Project">Genomic Data Science Project</option>
+              <option value="Academic Inquiry & Mentorship">Academic Inquiry &amp; Mentorship</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="messageText">TRANSMISSION PAYLOAD (MESSAGE)</label>
+            <textarea id="messageText" class="form-textarea" placeholder="Detail your project scope, dataset requirements, or collaboration proposal..." required></textarea>
+          </div>
+        </div>
+
+        <div class="transmission-actions">
+          <div class="quick-email-pill" onclick="copyEmailToClipboard()">
+            <svg class="svg-icon sm" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span>dksreevirija876@gmail.com</span>
+            <small style="color:var(--cyan-neon); margin-left: 4px;">(CLICK TO COPY)</small>
+          </div>
+
+          <button type="submit" class="btn-biocode primary">
+            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            <span>TRANSMIT DISPATCH</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER & FLOATING LAB CONTROLS
+       ========================================================================== -->
+  <footer class="biocode-footer">
+    <div class="footer-content">
+      <div style="text-align: left;">
+        <span style="color:var(--text-main); font-weight:700;">D.K. SREEVIRIJA</span> &bull; BIOCODE LAB
+        <div style="font-size: 11px; color: var(--text-dim); margin-top: 3px;">
+          Intersection of Biology &bull; Python &bull; Artificial Intelligence &bull; Bioinformatics
+        </div>
+      </div>
+
+      <div class="footer-security-seal">
+        <svg class="svg-icon sm" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span>BIO-CORE SECURE PROTOCOL v4.8 &bull; ALL RIGHTS RESERVED &copy; <span id="currentYear"></span></span>
+      </div>
+    </div>
+    <div style="font-size: 10.5px; color: var(--text-dim); border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+      LOCUS: KADAPA / AP &bull; GENOME COORDINATE: GRCh38.p14 &bull; ARCHITECTURE: PURE HTML5/CSS3/JS
+    </div>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button id="btnScrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Return to Top" aria-label="Return to top">
+    <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+
+  <!-- Notification Toast -->
+  <div class="toast-pill" id="biocodeToast">
+    EMAIL COPIED TO CLIPBOARD
   </div>
-</section>
 
-<footer>
-  <p>Designed & built by D.K. Sreevirija</p>
-  <p>Biology × Data × Intelligence</p>
-  <p>© <span id="year"></span> All rights reserved.</p>
-</footer>
+  <!-- ==========================================================================
+       INTERACTIVE JAVASCRIPT: THEME TOGGLE, 3D DNA CANVAS, LAB LOGIC, TERMINAL, SFX
+       ========================================================================== -->
+  <script>
+    // Set Current Year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-<button id="topButton" aria-label="Back to top"
-        onclick="window.scrollTo({top:0,behavior:'smooth'})">
-  ↑
-</button>
+    // ==========================================================================
+    // 1. THEME TOGGLE (LIGHT BLUE <--> MIDNIGHT)
+    // ==========================================================================
+    let currentTheme = localStorage.getItem('biocode_theme') || 'midnight';
 
-<script>
-document.getElementById("year").textContent =
-  new Date().getFullYear();
-</script>
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      currentTheme = theme;
+      localStorage.setItem('biocode_theme', theme);
 
+      const themeText = document.getElementById('themeText');
+      const iconSun = document.getElementById('themeIconSun');
+      const iconMoon = document.getElementById('themeIconMoon');
+
+      if (theme === 'light-blue') {
+        themeText.textContent = 'LIGHT BLUE';
+        iconSun.style.display = 'inline-block';
+        iconMoon.style.display = 'none';
+        if (window.updateThreeDNAColors) window.updateThreeDNAColors('light-blue');
+      } else {
+        themeText.textContent = 'MIDNIGHT';
+        iconSun.style.display = 'none';
+        iconMoon.style.display = 'inline-block';
+        if (window.updateThreeDNAColors) window.updateThreeDNAColors('midnight');
+      }
+    }
+
+    function toggleTheme() {
+      playBeep(currentTheme === 'midnight' ? 840 : 420, 0.08);
+      const newTheme = currentTheme === 'midnight' ? 'light-blue' : 'midnight';
+      applyTheme(newTheme);
+      showToast(`THEME SWITCHED TO ${newTheme.toUpperCase().replace('-', ' ')}`);
+    }
+
+    // Initialize Theme
+    applyTheme(currentTheme);
+
+    // ==========================================================================
+    // 2. SYNTHESIZED WEB AUDIO API SOUND SYSTEM (DEFAULT MUTED, TOGGLEABLE)
+    // ==========================================================================
+    let audioCtx = null;
+    let sfxEnabled = false;
+
+    const sfxToggleBtn = document.getElementById('sfxToggle');
+    const sfxStatusText = document.getElementById('sfxStatusText');
+
+    sfxToggleBtn.addEventListener('click', () => {
+      sfxEnabled = !sfxEnabled;
+      if (sfxEnabled) {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        sfxToggleBtn.classList.add('active');
+        sfxStatusText.textContent = 'SFX: ON';
+        playBeep(660, 0.08);
+      } else {
+        sfxToggleBtn.classList.remove('active');
+        sfxStatusText.textContent = 'SFX: OFF';
+      }
+    });
+
+    function playBeep(freq = 440, duration = 0.06, type = 'sine') {
+      if (!sfxEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Silent fallback
+      }
+    }
+
+    // ==========================================================================
+    // 3. 3D DNA DOUBLE HELIX (THREE.JS WITH NATIVE 2D CANVAS FALLBACK)
+    // ==========================================================================
+    const container = document.getElementById('dna-canvas-container');
+    const fallbackCanvas = document.getElementById('dnaFallbackCanvas');
+    let useThree = false;
+
+    // Test Three.js availability
+    if (typeof THREE !== 'undefined') {
+      try {
+        initThreeDNA();
+        useThree = true;
+      } catch (err) {
+        console.warn('Three.js init failed, falling back to 2D canvas', err);
+        initCanvasDNA();
+      }
+    } else {
+      initCanvasDNA();
+    }
+
+    function initThreeDNA() {
+      fallbackCanvas.style.display = 'none';
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.z = 28;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      const dnaGroup = new THREE.Group();
+      scene.add(dnaGroup);
+
+      const numPairs = 36;
+      const radius = 4.2;
+      const heightStep = 0.85;
+      const twistStep = 0.32;
+
+      const colorMap = {
+        'A': 0x10b981,
+        'T': 0xf43f5e,
+        'G': 0xfbbf24,
+        'C': 0x38bdf8
+      };
+      const pairs = [
+        ['A', 'T'], ['G', 'C'], ['T', 'A'], ['C', 'G'],
+        ['A', 'T'], ['C', 'G'], ['G', 'C'], ['T', 'A']
+      ];
+
+      const sphereGeo = new THREE.SphereGeometry(0.38, 16, 16);
+      const backboneGeo = new THREE.SphereGeometry(0.24, 12, 12);
+      const backboneMat = new THREE.MeshBasicMaterial({ color: 0x00f5d4 });
+
+      // Build Base Pairs
+      for (let i = 0; i < numPairs; i++) {
+        const y = (i - numPairs / 2) * heightStep;
+        const angle = i * twistStep;
+        const pair = pairs[i % pairs.length];
+
+        const x1 = Math.cos(angle) * radius;
+        const z1 = Math.sin(angle) * radius;
+        const x2 = Math.cos(angle + Math.PI) * radius;
+        const z2 = Math.sin(angle + Math.PI) * radius;
+
+        // Base 1
+        const mat1 = new THREE.MeshBasicMaterial({ color: colorMap[pair[0]] });
+        const sphere1 = new THREE.Mesh(sphereGeo, mat1);
+        sphere1.position.set(x1, y, z1);
+        dnaGroup.add(sphere1);
+
+        // Base 2
+        const mat2 = new THREE.MeshBasicMaterial({ color: colorMap[pair[1]] });
+        const sphere2 = new THREE.Mesh(sphereGeo, mat2);
+        sphere2.position.set(x2, y, z2);
+        dnaGroup.add(sphere2);
+
+        // Backbone
+        const bb1 = new THREE.Mesh(backboneGeo, backboneMat);
+        bb1.position.set(x1 * 1.08, y, z1 * 1.08);
+        dnaGroup.add(bb1);
+
+        const bb2 = new THREE.Mesh(backboneGeo, backboneMat);
+        bb2.position.set(x2 * 1.08, y, z2 * 1.08);
+        dnaGroup.add(bb2);
+
+        // Hydrogen Bond
+        const bondLength = radius * 2;
+        const cylinderGeo = new THREE.CylinderGeometry(0.06, 0.06, bondLength, 8);
+        const cylinderMat = new THREE.MeshBasicMaterial({
+          color: 0x94a3b8,
+          transparent: true,
+          opacity: 0.35
+        });
+        const bond = new THREE.Mesh(cylinderGeo, cylinderMat);
+        bond.position.set(0, y, 0);
+        bond.rotation.z = Math.PI / 2;
+        bond.rotation.y = -angle;
+        dnaGroup.add(bond);
+      }
+
+      // Background Particles
+      const particleCount = 120;
+      const particleGeo = new THREE.BufferGeometry();
+      const posArray = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        posArray[i] = (Math.random() - 0.5) * 45;
+        posArray[i + 1] = (Math.random() - 0.5) * 45;
+        posArray[i + 2] = (Math.random() - 0.5) * 30;
+      }
+      particleGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+      const particleMat = new THREE.PointsMaterial({
+        size: 0.22,
+        color: 0x00f5d4,
+        transparent: true,
+        opacity: 0.6
+      });
+      const particles = new THREE.Points(particleGeo, particleMat);
+      scene.add(particles);
+
+      // Support Dynamic Theme Colors on DNA
+      window.updateThreeDNAColors = function(theme) {
+        if (theme === 'light-blue') {
+          backboneMat.color.setHex(0x0284c7);
+          particleMat.color.setHex(0x0284c7);
+        } else {
+          backboneMat.color.setHex(0x00f5d4);
+          particleMat.color.setHex(0x00f5d4);
+        }
+      };
+
+      // Mouse Parallax Interaction
+      let mouseX = 0;
+      let mouseY = 0;
+      let targetRotationY = 0;
+      let targetRotationX = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth) - 0.5;
+        mouseY = (e.clientY / window.innerHeight) - 0.5;
+        targetRotationY = mouseX * 1.8;
+        targetRotationX = mouseY * 0.8;
+      });
+
+      // Responsive Resize
+      window.addEventListener('resize', () => {
+        if (!container.clientWidth || !container.clientHeight) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+
+      // Animation Loop
+      function animate() {
+        requestAnimationFrame(animate);
+        dnaGroup.rotation.y += 0.01;
+        dnaGroup.rotation.y += (targetRotationY - dnaGroup.rotation.y) * 0.05;
+        dnaGroup.rotation.x += (targetRotationX - dnaGroup.rotation.x) * 0.05;
+
+        particles.rotation.y += 0.001;
+        particles.rotation.x += 0.0005;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    // 2D Canvas Fallback
+    function initCanvasDNA() {
+      const ctx = fallbackCanvas.getContext('2d');
+      function resize() {
+        fallbackCanvas.width = container.clientWidth;
+        fallbackCanvas.height = container.clientHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      let angle = 0;
+      function draw() {
+        ctx.clearRect(0, 0, fallbackCanvas.width, fallbackCanvas.height);
+        const cx = fallbackCanvas.width * 0.65;
+        const radius = Math.min(fallbackCanvas.width, fallbackCanvas.height) * 0.22;
+        const pairs = 32;
+        const stepY = (fallbackCanvas.height * 0.9) / pairs;
+
+        for (let i = 0; i < pairs; i++) {
+          const y = (i * stepY) + 20;
+          const a = angle + (i * 0.28);
+          const x1 = cx + Math.cos(a) * radius;
+          const x2 = cx + Math.cos(a + Math.PI) * radius;
+          const z1 = Math.sin(a);
+          const z2 = Math.sin(a + Math.PI);
+
+          ctx.beginPath();
+          ctx.moveTo(x1, y);
+          ctx.lineTo(x2, y);
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(x1, y, 4 + z1 * 2, 0, Math.PI * 2);
+          ctx.fillStyle = z1 > 0 ? '#00f5d4' : '#00b4d8';
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(x2, y, 4 + z2 * 2, 0, Math.PI * 2);
+          ctx.fillStyle = z2 > 0 ? '#9d4edd' : '#f43f5e';
+          ctx.fill();
+        }
+        angle += 0.015;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    // ==========================================================================
+    // 4. CENTRAL DOGMA & NUCLEOTIDE TRANSLATOR LOGIC
+    // ==========================================================================
+    const codonTable = {
+      'AUG': { aa: 'Met (Start)', sym: 'M' },
+      'UUU': { aa: 'Phe', sym: 'F' }, 'UUC': { aa: 'Phe', sym: 'F' },
+      'UUA': { aa: 'Leu', sym: 'L' }, 'UUG': { aa: 'Leu', sym: 'L' },
+      'CUU': { aa: 'Leu', sym: 'L' }, 'CUC': { aa: 'Leu', sym: 'L' }, 'CUA': { aa: 'Leu', sym: 'L' }, 'CUG': { aa: 'Leu', sym: 'L' },
+      'AUU': { aa: 'Ile', sym: 'I' }, 'AUC': { aa: 'Ile', sym: 'I' }, 'AUA': { aa: 'Ile', sym: 'I' },
+      'GUU': { aa: 'Val', sym: 'V' }, 'GUC': { aa: 'Val', sym: 'V' }, 'GUA': { aa: 'Val', sym: 'V' }, 'GUG': { aa: 'Val', sym: 'V' },
+      'UCU': { aa: 'Ser', sym: 'S' }, 'UCC': { aa: 'Ser', sym: 'S' }, 'UCA': { aa: 'Ser', sym: 'S' }, 'UCG': { aa: 'Ser', sym: 'S' },
+      'CCU': { aa: 'Pro', sym: 'P' }, 'CCC': { aa: 'Pro', sym: 'P' }, 'CCA': { aa: 'Pro', sym: 'P' }, 'CCG': { aa: 'Pro', sym: 'P' },
+      'ACU': { aa: 'Thr', sym: 'T' }, 'ACC': { aa: 'Thr', sym: 'T' }, 'ACA': { aa: 'Thr', sym: 'T' }, 'ACG': { aa: 'Thr', sym: 'T' },
+      'GCU': { aa: 'Ala', sym: 'A' }, 'GCC': { aa: 'Ala', sym: 'A' }, 'GCA': { aa: 'Ala', sym: 'A' }, 'GCG': { aa: 'Ala', sym: 'A' },
+      'UAU': { aa: 'Tyr', sym: 'Y' }, 'UAC': { aa: 'Tyr', sym: 'Y' },
+      'UAA': { aa: 'STOP', sym: '*' }, 'UAG': { aa: 'STOP', sym: '*' }, 'UGA': { aa: 'STOP', sym: '*' },
+      'CAU': { aa: 'His', sym: 'H' }, 'CAC': { aa: 'His', sym: 'H' },
+      'CAA': { aa: 'Gln', sym: 'Q' }, 'CAG': { aa: 'Gln', sym: 'Q' },
+      'AAU': { aa: 'Asn', sym: 'N' }, 'AAC': { aa: 'Asn', sym: 'N' },
+      'AAA': { aa: 'Lys', sym: 'K' }, 'AAG': { aa: 'Lys', sym: 'K' },
+      'GAU': { aa: 'Asp', sym: 'D' }, 'GAC': { aa: 'Asp', sym: 'D' },
+      'GAA': { aa: 'Glu', sym: 'E' }, 'GAG': { aa: 'Glu', sym: 'E' },
+      'UGU': { aa: 'Cys', sym: 'C' }, 'UGC': { aa: 'Cys', sym: 'C' },
+      'UGG': { aa: 'Trp', sym: 'W' },
+      'CGU': { aa: 'Arg', sym: 'R' }, 'CGC': { aa: 'Arg', sym: 'R' }, 'CGA': { aa: 'Arg', sym: 'R' }, 'CGG': { aa: 'Arg', sym: 'R' },
+      'AGU': { aa: 'Ser', sym: 'S' }, 'AGC': { aa: 'Ser', sym: 'S' },
+      'AGA': { aa: 'Arg', sym: 'R' }, 'AGG': { aa: 'Arg', sym: 'R' },
+      'GGU': { aa: 'Gly', sym: 'G' }, 'GGC': { aa: 'Gly', sym: 'G' }, 'GGA': { aa: 'Gly', sym: 'G' }, 'GGG': { aa: 'Gly', sym: 'G' }
+    };
+
+    const seqPresets = {
+      insulin: "ATGGCCCTGTGGATGCGCCTCCTGCCCCTGCTGGCGCTGCTGGCCCTCTGGGGACCTGACCCAGCCGCAGCC",
+      p53: "ATGGAGGAGCCGCAGTCAGATCCTAGCGTCGAGCCCCCTCTGAGTCAGGAAACATTTTCAGACCTATGGAAA",
+      gfp: "ATGGTGAGCAAGGGCGAGGAGCTGTTCACCGGGGTGGTGCCCATCCTGGTCGAGCTGGACGGCGACGTAAAC"
+    };
+
+    function loadSequencePreset(key) {
+      if (seqPresets[key]) {
+        document.getElementById('dnaInput').value = seqPresets[key];
+        playBeep(520, 0.08);
+        executeCentralDogma();
+      }
+    }
+
+    function executeCentralDogma() {
+      playBeep(700, 0.05);
+      const raw = document.getElementById('dnaInput').value.toUpperCase().replace(/[^ATGC]/g, '');
+      document.getElementById('dnaInput').value = raw;
+      document.getElementById('seqLenCounter').textContent = `LENGTH: ${raw.length} bp`;
+
+      if (raw.length === 0) {
+        document.getElementById('dnaComplementDisplay').innerHTML = '<span style="color:var(--text-dim)">[No Sequence Entered]</span>';
+        document.getElementById('mrnaDisplay').innerHTML = '';
+        document.getElementById('proteinDisplay').innerHTML = '';
+        return;
+      }
+
+      // Complementary DNA Strand
+      const compMap = { 'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G' };
+      let compStr = '';
+      let compHtml = '';
+      for (let char of raw) {
+        const c = compMap[char] || 'N';
+        compStr += c;
+        compHtml += `<span class="nucleotide-span base-${c}">${c}</span>`;
+      }
+      document.getElementById('dnaComplementDisplay').innerHTML = compHtml;
+
+      // mRNA (Transcription: T -> U)
+      let mrnaStr = '';
+      let mrnaHtml = '';
+      for (let char of raw) {
+        const u = char === 'T' ? 'U' : char;
+        mrnaStr += u;
+        mrnaHtml += `<span class="nucleotide-span base-${u}">${u}</span>`;
+      }
+      document.getElementById('mrnaDisplay').innerHTML = mrnaHtml;
+
+      // Protein Polypeptide (Translation: Codons)
+      let proteinHtml = '';
+      let aaCount = 0;
+      for (let i = 0; i + 2 < mrnaStr.length; i += 3) {
+        const codon = mrnaStr.slice(i, i + 3);
+        const entry = codonTable[codon] || { aa: '?', sym: '?' };
+        aaCount++;
+        proteinHtml += `
+          <div class="amino-codon-chip">
+            <span class="amino-symbol">${entry.sym} &bull; ${entry.aa}</span>
+            <span class="amino-triplet">${codon}</span>
+          </div>
+        `;
+      }
+      document.getElementById('proteinDisplay').innerHTML = proteinHtml || '<span style="color:var(--text-dim)">[Less than 3 bp for complete codon]</span>';
+      document.getElementById('proteinLengthMeta').textContent = `${aaCount} Residues`;
+
+      // Metrics
+      let gcCount = 0;
+      for (let c of raw) {
+        if (c === 'G' || c === 'C') gcCount++;
+      }
+      const gcPct = ((gcCount / raw.length) * 100).toFixed(1);
+      document.getElementById('gcPctVal').textContent = `${gcPct}%`;
+      document.getElementById('gcBarFill').style.width = `${gcPct}%`;
+
+      const mw = ((raw.length * 325) / 1000).toFixed(2);
+      document.getElementById('molWeightVal').textContent = `${mw} kDa`;
+
+      const pIEst = (6.0 + (gcCount / raw.length) * 1.5).toFixed(2);
+      document.getElementById('pIVal').textContent = `${pIEst} pH`;
+
+      document.getElementById('codonCountVal').textContent = `${aaCount} AA`;
+    }
+
+    function mutateRandomBase() {
+      playBeep(920, 0.08);
+      const input = document.getElementById('dnaInput');
+      let str = input.value.toUpperCase().replace(/[^ATGC]/g, '');
+      if (str.length === 0) return;
+      const bases = ['A', 'T', 'G', 'C'];
+      const randIdx = Math.floor(Math.random() * str.length);
+      const current = str[randIdx];
+      const otherBases = bases.filter(b => b !== current);
+      const newBase = otherBases[Math.floor(Math.random() * otherBases.length)];
+      str = str.substring(0, randIdx) + newBase + str.substring(randIdx + 1);
+      input.value = str;
+      executeCentralDogma();
+      showToast(`MUTATION: Position ${randIdx + 1} (${current} &rarr; ${newBase})`);
+    }
+
+    function reverseComplementSeq() {
+      playBeep(480, 0.08);
+      const input = document.getElementById('dnaInput');
+      const raw = input.value.toUpperCase().replace(/[^ATGC]/g, '');
+      const compMap = { 'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G' };
+      let revComp = '';
+      for (let i = raw.length - 1; i >= 0; i--) {
+        revComp += compMap[raw[i]] || 'N';
+      }
+      input.value = revComp;
+      executeCentralDogma();
+      showToast(`REVERSE COMPLEMENT GENERATED`);
+    }
+
+    // ==========================================================================
+    // 5. AI ONCO-CLASSIFIER SIMULATOR LOGIC
+    // ==========================================================================
+    function runClassifierSimulation() {
+      playBeep(620, 0.03);
+      const tp53 = parseInt(document.getElementById('range-tp53').value);
+      const brca1 = parseInt(document.getElementById('range-brca1').value);
+      const egfr = parseInt(document.getElementById('range-egfr').value);
+      const myc = parseInt(document.getElementById('range-myc').value);
+
+      document.getElementById('val-tp53').textContent = `${tp53} FPKM`;
+      document.getElementById('val-brca1').textContent = `${brca1} FPKM`;
+      document.getElementById('val-egfr').textContent = `${egfr} FPKM`;
+      document.getElementById('val-myc').textContent = `${myc} FPKM`;
+
+      // Multidimensional Oncogenic Decision Boundary
+      const oncogenicScore = (egfr * 0.35 + myc * 0.40) - (tp53 * 0.30 + brca1 * 0.25);
+      const riskBar = document.getElementById('riskBarFill');
+      const verdict = document.getElementById('inferenceVerdict');
+      const conf = document.getElementById('inferenceConfidence');
+
+      if (oncogenicScore > 20) {
+        verdict.textContent = "MALIGNANT BASAL-LIKE PHENOTYPE";
+        verdict.style.color = "#f43f5e";
+        const prob = Math.min(99.2, (82 + (oncogenicScore - 20) * 0.5)).toFixed(1);
+        conf.textContent = `Confidence: ${prob}% \u2022 Overexpressed Proliferation Signatures`;
+        riskBar.style.width = '88%';
+        riskBar.style.background = '#f43f5e';
+      } else if (oncogenicScore > 0) {
+        verdict.textContent = "SUSPICIOUS HYPERPLASTIC EXPRESSION";
+        verdict.style.color = "#fbbf24";
+        conf.textContent = `Confidence: 78.4% \u2022 Borderline Kinase Activity`;
+        riskBar.style.width = '55%';
+        riskBar.style.background = '#fbbf24';
+      } else {
+        verdict.textContent = "NORMAL TISSUE HOMEOSTASIS";
+        verdict.style.color = "var(--cyan-neon)";
+        conf.textContent = `Confidence: 96.1% \u2022 Baseline Cell Cycle Integrity`;
+        riskBar.style.width = '20%';
+        riskBar.style.background = 'var(--cyan-neon)';
+      }
+    }
+
+    function setClassifierSample(tp53, brca1, egfr, myc) {
+      document.getElementById('range-tp53').value = tp53;
+      document.getElementById('range-brca1').value = brca1;
+      document.getElementById('range-egfr').value = egfr;
+      document.getElementById('range-myc').value = myc;
+      runClassifierSimulation();
+    }
+
+    // ==========================================================================
+    // 6. LAB TABS SWITCHER
+    // ==========================================================================
+    function switchLabTab(tabKey) {
+      playBeep(560, 0.05);
+      document.querySelectorAll('.lab-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.lab-tab-content').forEach(c => c.style.display = 'none');
+
+      document.getElementById(`tab-btn-${tabKey}`).classList.add('active');
+      document.getElementById(`lab-tab-${tabKey}`).style.display = 'block';
+
+      if (tabKey === 'terminal') {
+        setTimeout(() => document.getElementById('terminalInput').focus(), 100);
+      }
+    }
+
+    // ==========================================================================
+    // 7. IN-SILICO CLI BIOCODE TERMINAL LOGIC
+    // ==========================================================================
+    const termInput = document.getElementById('terminalInput');
+    const termBody = document.getElementById('terminalBody');
+
+    termInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const cmd = termInput.value.trim();
+        termInput.value = '';
+        if (cmd) {
+          handleTerminalCmd(cmd);
+        }
+      }
+    });
+
+    function focusBioTerminal() {
+      switchLabTab('terminal');
+      document.getElementById('lab').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function handleTerminalCmd(rawCmd) {
+      playBeep(750, 0.04);
+      appendTermLine(`<span class="term-prompt">sreevirija@biocode:~$</span> ${escapeHtml(rawCmd)}`);
+      const parts = rawCmd.split(' ');
+      const command = parts[0].toLowerCase();
+
+      switch (command) {
+        case 'help':
+          appendTermLine(`<span class="term-highlight">AVAILABLE BIOCODE COMMANDS:</span>`);
+          appendTermLine(`  <span class="term-success">blast</span>              - Simulate local BLAST sequence alignment query`);
+          appendTermLine(`  <span class="term-success">dogma</span>              - View central dogma transcription summary`);
+          appendTermLine(`  <span class="term-success">projects</span>           - List laboratory research dossiers`);
+          appendTermLine(`  <span class="term-success">skills</span>             - Output bioinformatic toolchain`);
+          appendTermLine(`  <span class="term-success">stats</span>              - Display active genomic runtime metrics`);
+          appendTermLine(`  <span class="term-success">theme</span>              - Toggle light blue and midnight theme`);
+          appendTermLine(`  <span class="term-success">contact</span>            - Jump to communications dispatch uplink`);
+          appendTermLine(`  <span class="term-success">clear</span>              - Clear terminal display buffer`);
+          break;
+
+        case 'theme':
+          toggleTheme();
+          appendTermLine(`Theme updated to: ${currentTheme.toUpperCase()}`);
+          break;
+
+        case 'blast':
+          appendTermLine(`<span class="term-warn">[NCBI BLAST+ v2.14.0]</span> Searching Nucleotide Database (nt)...`);
+          setTimeout(() => {
+            appendTermLine(`Query: Human INS Gene [Length: 72 bp]`);
+            appendTermLine(`Hit 1: Homo sapiens insulin (INS), mRNA &bull; Score: 142 bits &bull; E-value: 3e-38 (100% Identity)`);
+            appendTermLine(`Hit 2: Pan troglodytes insulin &bull; Score: 138 bits &bull; E-value: 1e-36 (98.6% Identity)`);
+            appendTermLine(`<span class="term-success">&gt;&gt; Alignment complete. Zero significant mismatches in core CDS.</span>`);
+            termBody.scrollTop = termBody.scrollHeight;
+          }, 350);
+          break;
+
+        case 'dogma':
+          appendTermLine(`Central Dogma Status: DNA -> mRNA -> Protein Active.`);
+          appendTermLine(`Loaded CDS Length: ${document.getElementById('dnaInput').value.length} bp`);
+          appendTermLine(`GC Skew: ${document.getElementById('gcPctVal').textContent}`);
+          break;
+
+        case 'projects':
+          appendTermLine(`<span class="term-highlight">RESEARCH DOSSIERS:</span>`);
+          appendTermLine(`  01. Gene-Expression Classifier & Biomarker Discovery (scikit-learn)`);
+          appendTermLine(`  02. Interactive Diagnostic Demo (Django + Teachable Machine)`);
+          appendTermLine(`  03. HelixFold-Lite: Protein Secondary Structure Profiler`);
+          appendTermLine(`  04. CRISPR-Scan: Guide RNA PAM Finder`);
+          appendTermLine(`  05. Single-Cell Transcriptome Visualizer`);
+          break;
+
+        case 'skills':
+          appendTermLine(`<span class="term-highlight">TECHNICAL ARSENAL:</span>`);
+          appendTermLine(`  Languages: Python 3, SQL, Bash, JavaScript, HTML5/CSS3`);
+          appendTermLine(`  Data Science: NumPy, Pandas, SciPy, Matplotlib, Seaborn`);
+          appendTermLine(`  Machine Learning: scikit-learn, Random Forest, SVM, PCA`);
+          appendTermLine(`  Bioinformatics: Biopython, BLAST API, PDB, RNA-Seq`);
+          break;
+
+        case 'stats':
+          appendTermLine(`Active Chromosome: chr17q21.31`);
+          appendTermLine(`Ensemble AUC: 0.984`);
+          appendTermLine(`Environment: Python 3.11.4 / Biopython 1.83`);
+          break;
+
+        case 'contact':
+          appendTermLine(`Redirecting to communications console...`);
+          document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+          break;
+
+        case 'clear':
+          termBody.innerHTML = '';
+          break;
+
+        default:
+          appendTermLine(`<span class="term-warn">Command not recognized: '${escapeHtml(command)}'. Type 'help' for commands.</span>`);
+      }
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    function appendTermLine(html) {
+      const line = document.createElement('div');
+      line.className = 'term-line';
+      line.innerHTML = html;
+      termBody.appendChild(line);
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ==========================================================================
+    // 8. JOURNEY STAGE INSPECTOR LOGIC
+    // ==========================================================================
+    const stageDetails = {
+      1: {
+        title: "STAGE 01 INSPECTION: Molecular Systems & Wet-Lab Foundations",
+        badge: "WET-LAB ESSENTIALS",
+        bio: "All computational bioinformatics stems from the double helix. Living cells store hereditary information across adenine (A), thymine (T), guanine (G), and cytosine (C). Before any algorithm can predict disease phenotypes, we must comprehend how wet-lab extraction, PCR amplification, and enzymic cleavage affect the biological sample.",
+        code: `# Biopython: Reading and validating nucleic sequences
+from Bio.Seq import Seq
+
+raw_dna = Seq("ATGGCCCTGTGGATGCGCCTCCTGCCCCTG")
+mrna = raw_dna.transcribe()
+protein = raw_dna.translate()
+
+print(f"Transcript: {mrna}")
+print(f"Translated: {protein} (Len: {len(protein)})")`
+      },
+      2: {
+        title: "STAGE 02 INSPECTION: Next-Gen Sequencing & Quality Scoring",
+        badge: "HIGH-THROUGHPUT OMICS",
+        bio: "Next-Generation Sequencing platforms generate gigabytes of raw optical base-calling data. FASTQ formats encode both the nucleotide sequence and an ASCII-mapped Phred quality score (Q = -10 log10 P_err). Quality control and adapter trimming ensure downstream machine learning algorithms learn biological signals rather than sequencer noise.",
+        code: `# Parsing FASTQ reads and evaluating Phred quality
+from Bio import SeqIO
+
+def filter_low_quality(fastq_file, min_q=30):
+    high_q_reads = []
+    for record in SeqIO.parse(fastq_file, "fastq"):
+        mean_q = sum(record.letter_annotations["phred_quality"]) / len(record)
+        if mean_q >= min_q:
+            high_q_reads.append(record)
+    return high_q_reads`
+      },
+      3: {
+        title: "STAGE 03 INSPECTION: Python Vectorization & Matrix Normalization",
+        badge: "DATA ENGINEERING",
+        bio: "Biological datasets are notoriously high-dimensional (thousands of genes vs tens of patient cohorts). Python, NumPy, and Pandas enable TPM (Transcripts Per Kilobase Million) normalization, log2-transformation, and handling batch effects to convert raw biological read counts into clean mathematical tensors.",
+        code: `# Gene-Expression normalization in Pandas/NumPy
+import numpy as np
+import pandas as pd
+
+def normalize_expression(counts_df):
+    # Log2 transformation with pseudocount
+    log2_expr = np.log2(counts_df + 1.0)
+    # Z-score standardization across samples
+    z_scores = (log2_expr - log2_expr.mean()) / log2_expr.std()
+    return z_scores`
+      },
+      4: {
+        title: "STAGE 04 INSPECTION: Machine Learning & Biomarker Discovery",
+        badge: "PREDICTIVE MODELING",
+        bio: "Supervised classification models (Random Forests, Support Vector Machines) pinpoint minimal biomarker subsets capable of differentiating cancer subtypes. Using stratified cross-validation and ROC-AUC metrics ensures that our predictive bioinformatics model generalizes robustly to independent clinical cohorts.",
+        code: `# Supervised Biomarker Classification with Scikit-Learn
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+scores = cross_val_score(rf, X_expr, y_labels, cv=5, scoring='roc_auc')
+
+print(f"Mean ROC-AUC: {scores.mean():.4f} (+/- {scores.std():.4f})")
+# Extract top Gini-importance oncogenes
+top_biomarkers = rf.feature_importances_.argsort()[::-1][:5]`
+      },
+      5: {
+        title: "STAGE 05 INSPECTION: Structural Biology & Macromolecular Folding",
+        badge: "STRUCTURAL INFORMATICS",
+        bio: "Proteins operate in 3D Euclidean space. By analyzing atomic coordinate records from the Protein Data Bank (PDB), calculating dihedral Ramachandran angles (phi, psi), and modeling hydrophobicity distributions, we connect 1D genetic sequences to 3D enzymatic function and drug binding pockets.",
+        code: `# Structural PDB Parsing and Distance Matrix
+from Bio.PDB import PDBParser
+
+parser = PDBParser(QUIET=True)
+structure = parser.get_structure("1INS", "insulin.pdb")
+
+for model in structure:
+    for chain in model:
+        ca_atoms = [atom for atom in chain.get_atoms() if atom.get_id() == "CA"]
+        print(f"Chain {chain.id}: {len(ca_atoms)} C-alpha coordinates")`
+      },
+      6: {
+        title: "STAGE 06 INSPECTION: Translational AI & Clinical Discovery",
+        badge: "FULL-STACK BIO-AI",
+        bio: "A bioinformatic discovery is only as powerful as its accessibility. By packaging trained machine-learning models into interactive Django web applications, REST APIs, and reproducible computational pipelines, researchers and clinicians can rapidly query patient mutations and explore diagnostic possibilities.",
+        code: `# Django REST API endpoint for real-time inference
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+class PredictSubtypeView(APIView):
+    def post(self, request):
+        gene_vector = request.data.get('expression_vector')
+        pred_subtype = model.predict([gene_vector])[0]
+        confidence = float(np.max(model.predict_proba([gene_vector])))
+        return Response({'subtype': pred_subtype, 'confidence': confidence})`
+      }
+    };
+
+    function inspectStage(stageNum) {
+      playBeep(490, 0.05);
+      document.querySelectorAll('.pipeline-node').forEach(node => node.classList.remove('active-stage'));
+      const clickedNode = document.querySelectorAll('.pipeline-node')[stageNum - 1];
+      if (clickedNode) clickedNode.classList.add('active-stage');
+
+      const data = stageDetails[stageNum];
+      if (data) {
+        document.getElementById('inspectorTitle').innerHTML = `<span>STAGE 0${stageNum}:</span> ${data.title.split(': ')[1]}`;
+        document.getElementById('inspectorBadge').textContent = data.badge;
+        document.getElementById('inspectorBioText').textContent = data.bio;
+        document.getElementById('inspectorCodeSnippet').textContent = data.code;
+        document.getElementById('journeyInspector').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    // ==========================================================================
+    // 9. PROJECT FILTERING & DOSSIER MODALS
+    // ==========================================================================
+    function filterProjects(category) {
+      playBeep(580, 0.04);
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach(card => {
+        if (category === 'all') {
+          card.style.display = 'flex';
+        } else {
+          const cats = card.getAttribute('data-cat') || '';
+          if (cats.includes(category)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    const dossierData = {
+      exp01: {
+        title: "Gene-Expression Classification & Biomarker Discovery",
+        category: "SUPERVISED MACHINE LEARNING & HIGH-DIMENSIONAL GENOMICS",
+        metrics: "ROC-AUC: 0.984 | Cross-Validation: 5-Fold Stratified | Feature Selection: Variance Thresholding",
+        desc: "A bioinformatics research project focused on building an end-to-end machine learning pipeline for biological classification. Starting from normalized micro-array gene expression values, high-dimensional noise was reduced using Principal Component Analysis (PCA) and SelectKBest algorithms. Evaluated both Random Forest and Support Vector Machine architectures.",
+        stack: ["Python 3", "scikit-learn", "NumPy", "Pandas", "Matplotlib", "Jupyter Notebook"],
+        insights: [
+          "Identified minimal subset of 12 oncogenes delivering >98% classification sensitivity across 5 disease subtypes.",
+          "Prevented data leakage by embedding scaling and feature selection strictly inside cross-validation pipelines.",
+          "Generated interactive confusion matrices and precision-recall trade-off curves."
+        ]
+      },
+      exp02: {
+        title: "Interactive ML Diagnostic Demo & Vision Interface",
+        category: "FULL-STACK WEB DEVELOPMENT & COMPUTER VISION",
+        metrics: "Latency: <115ms | Framework: Django REST + Teachable Machine | Deployment: Local/Cloud Prototype",
+        desc: "Engineered an interactive web platform demonstrating real-time computer vision inference. Integrated a pre-trained image classification model from Google's Teachable Machine into a Django framework backend to demonstrate how clinical laboratories can ingest cellular microscopy feeds and receive instant automated categorization.",
+        stack: ["Django", "Python", "Teachable Machine", "JavaScript (ES6)", "HTML5 / CSS3", "REST APIs"],
+        insights: [
+          "Developed asynchronous browser-based camera capture feeding into local tensor inference.",
+          "Built clean Django endpoints for logging diagnostic inference telemetry.",
+          "Authored comprehensive documentation and reproducible setup guides for collaborative team use."
+        ]
+      },
+      exp03: {
+        title: "HelixFold-Lite: Protein Secondary Structure Profiler",
+        category: "COMPUTATIONAL STRUCTURAL BIOLOGY",
+        metrics: "Throughput: 12,000 AA/sec | Algorithms: Kyte-Doolittle, Chou-Fasman | Output: PDB & Physicochemical Stats",
+        desc: "A Python-powered computational structural biology suite that processes linear FASTA polypeptide chains to predict secondary structure propensity (alpha-helices vs beta-strands) and physicochemical profiles (hydropathy plots, isoelectric titration curves, net charge distribution).",
+        stack: ["Biopython", "SciPy", "Matplotlib", "Python", "PDB Algorithms"],
+        insights: [
+          "Implemented Kyte-Doolittle hydrophobicity sliding window algorithm for transmembrane domain prediction.",
+          "Calculated theoretical isoelectric point (pI) using iterative Henderson-Hasselbalch equations.",
+          "Exported publication-quality SVG hydropathy charts."
+        ]
+      },
+      exp04: {
+        title: "CRISPR-Scan: In-Silico Guide RNA Target & Off-Target Finder",
+        category: "GENOMIC EDITING & STRING ALGORITHMS",
+        metrics: "PAM Target: 5'-NGG-3' | Match Speed: <200ms per gene exon | Mismatch Tolerance: 0 to 3 bp",
+        desc: "In-silico tool for identifying optimal single-guide RNA (sgRNA) candidates for CRISPR-Cas9 genome editing. Searches forward and reverse complementary strands for Protospacer Adjacent Motifs (PAM: NGG), scoring on-target cleavage efficiency based on GC content (40-60%) and filtering out poly-T termination tracts.",
+        stack: ["Python 3", "Regex & String Matching", "NumPy", "Genomics Algorithms"],
+        insights: [
+          "Automated exon scanning for both 5'-to-3' and 3'-to-5' DNA strands.",
+          "Evaluated GC balance within the 20-nucleotide protospacer seed region.",
+          "Ranked guide RNAs by predicted cleavage efficiency and thermodynamic stability."
+        ]
+      },
+      exp05: {
+        title: "Single-Cell Transcriptome Visualizer",
+        category: "SINGLE-CELL RNA-SEQ & UNSUPERVISED CLUSTERING",
+        metrics: "Resolution: 10,000 Cells | Dimensionality: t-SNE & UMAP | Clustering: K-Means & Louvain",
+        desc: "An exploration platform for resolving cellular heterogeneity in scRNA-seq experiments. Ingests high-dimensional single-cell count matrices, performs library size normalization, identifies highly variable genes (HVGs), and visualizes cellular clusters to discover distinct leukocyte and epithelial subpopulations.",
+        stack: ["Python", "scikit-learn", "t-SNE / UMAP", "Seaborn", "Pandas"],
+        insights: [
+          "Demonstrated distinct cluster separation for T-cells, B-cells, and monocytes from peripheral blood samples.",
+          "Built interactive color-mapping based on individual marker gene expression intensities.",
+          "Provided reproducible Jupyter workflows for exploratory single-cell bioinformatics."
+        ]
+      }
+    };
+
+    function openDossierModal(dossierKey) {
+      playBeep(640, 0.06);
+      const data = dossierData[dossierKey];
+      if (!data) return;
+
+      const inner = document.getElementById('modalInnerContent');
+      let stackHtml = data.stack.map(s => `<span class="stack-tag">${s}</span>`).join(' ');
+      let insightsHtml = data.insights.map(i => `<li style="margin-bottom: 6px; color: var(--text-muted);">${i}</li>`).join('');
+
+      inner.innerHTML = `
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--cyan-bright); margin-bottom: 6px;">
+          // RESEARCH DOSSIER ARCHIVE: ${dossierKey.toUpperCase()}
+        </div>
+        <h2 style="font-family: var(--font-display); font-size: 21px; color: var(--text-main); margin-bottom: 8px;">
+          ${data.title}
+        </h2>
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--purple-helix); margin-bottom: 16px;">
+          ${data.category}
+        </div>
+        <div style="background: var(--bg-void); border: 1px solid var(--border-subtle); padding: 10px 14px; border-radius: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--cyan-neon); margin-bottom: 20px;">
+          ${data.metrics}
+        </div>
+        <h4 style="font-family: var(--font-mono); font-size: 11.5px; color: var(--text-main); margin-bottom: 8px;">ABSTRACT &amp; OBJECTIVE:</h4>
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.7; margin-bottom: 18px;">
+          ${data.desc}
+        </p>
+        <h4 style="font-family: var(--font-mono); font-size: 11.5px; color: var(--text-main); margin-bottom: 8px;">KEY METHODOLOGICAL INSIGHTS:</h4>
+        <ul style="padding-left: 20px; font-size: 13px; margin-bottom: 18px;">
+          ${insightsHtml}
+        </ul>
+        <h4 style="font-family: var(--font-mono); font-size: 11.5px; color: var(--text-main); margin-bottom: 8px;">TECHNOLOGICAL STACK:</h4>
+        <div style="display: flex; flex-wrap: wrap; gap: 7px;">
+          ${stackHtml}
+        </div>
+      `;
+
+      document.getElementById('dossierModalBackdrop').classList.add('active');
+    }
+
+    function closeDossierModal() {
+      playBeep(420, 0.05);
+      document.getElementById('dossierModalBackdrop').classList.remove('active');
+    }
+
+    function closeDossierModalOnBackdrop(e) {
+      if (e.target.id === 'dossierModalBackdrop') {
+        closeDossierModal();
+      }
+    }
+
+    // ==========================================================================
+    // 10. CONTACT / TRANSMISSION FORM & CLIPBOARD
+    // ==========================================================================
+    function handleTransmission(e) {
+      e.preventDefault();
+      playBeep(880, 0.1);
+      const name = document.getElementById('senderName').value;
+      const email = document.getElementById('senderEmail').value;
+      const subject = document.getElementById('subjectSelect').value;
+      const message = document.getElementById('messageText').value;
+
+      const mailtoUrl = `mailto:dksreevirija876@gmail.com?subject=${encodeURIComponent(`[BioCode Inquiry] ${subject} - from ${name}`)}&body=${encodeURIComponent(`Sender: ${name}\nEmail: ${email}\nTopic: ${subject}\n\nMessage:\n${message}`)}`;
+
+      showToast("PREPARING SECURE EMAIL TRANSMISSION...");
+      setTimeout(() => {
+        window.location.href = mailtoUrl;
+      }, 400);
+    }
+
+    function copyEmailToClipboard() {
+      playBeep(700, 0.06);
+      navigator.clipboard.writeText("dksreevirija876@gmail.com").then(() => {
+        showToast("EMAIL COPIED: dksreevirija876@gmail.com");
+      }).catch(() => {
+        showToast("dksreevirija876@gmail.com");
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('biocodeToast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2800);
+    }
+
+    // ==========================================================================
+    // 11. MOBILE MENU & RUNTIME INITIALIZATION
+    // ==========================================================================
+    const mobileBtn = document.getElementById('mobileMenuToggle');
+    const mainNav = document.getElementById('mainNav');
+    mobileBtn.addEventListener('click', () => {
+      mainNav.classList.toggle('mobile-open');
+    });
+
+    document.querySelectorAll('#mainNav a').forEach(link => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('mobile-open');
+      });
+    });
+
+    // Uptime Clock Counter
+    let secondsUptime = 1420;
+    setInterval(() => {
+      secondsUptime++;
+      const hrs = String(Math.floor(secondsUptime / 3600)).padStart(2, '0');
+      const mins = String(Math.floor((secondsUptime % 3600) / 60)).padStart(2, '0');
+      const secs = String(secondsUptime % 60).padStart(2, '0');
+      document.getElementById('runtimeClock').textContent = `${hrs}:${mins}:${secs}`;
+    }, 1000);
+
+    // Initial Execution of Central Dogma & AI Classifier on page load
+    executeCentralDogma();
+    runClassifierSimulation();
+  </script>
 </body>
 </html>
